@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>כלי עזר לפגייה</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><h1>כלי עזר לפגייה</h1></header>
+<nav id="tabs">
+  <button data-tab="age" class="on">גיל מתוקן</button>
+  <button data-tab="pku">סקר ילודים (PKU)</button>
+  <button data-tab="sga">SGA / LGA</button>
+  <button data-tab="bili">סף טיפול באור</button>
+  <button data-tab="sepsis">סיכון לזיהום</button>
+</nav>
+
+<main>
+<section id="age" class="panel on">
+  <h2>גיל מתוקן וגיל הריון מצטבר</h2>
+  <label>שבוע לידה <input id="age-w" type="number" inputmode="numeric" min="22" max="44"></label>
+  <label>ימים (0–6) <input id="age-d" type="number" inputmode="numeric" min="0" max="6" value="0"></label>
+  <label>גיל התינוק בשעות <input id="age-h" type="number" inputmode="numeric" min="0"></label>
+  <div id="age-out" class="out"></div>
+</section>
+
+<section id="pku" class="panel">
+  <h2>מועדי בדיקת סקר ילודים</h2>
+  <label>תאריך ושעת לידה <input id="pku-birth" type="datetime-local"></label>
+  <div id="pku-out" class="out"></div>
+  <p class="soon">מקרים נוספים (תינוק שצם, בדיקה אחרי ארבע הזנות, בדיקה חוזרת לפי הוראה) – לפי נוהל המחלקה. הכלי מחשב רק את שלושת המועדים הרגילים.</p>
+</section>
+
+<section id="sga" class="panel">
+  <h2>SGA / LGA לפי משקל לידה (Fenton 2025)</h2>
+  <label>מין <select id="sg-sex"><option value="">בחרי…</option><option value="m">זכר</option><option value="f">נקבה</option></select></label>
+  <label>שבוע לידה <input id="sg-w" type="number" inputmode="numeric" min="22" max="42"></label>
+  <label>ימים (0–6) <input id="sg-d" type="number" inputmode="numeric" min="0" max="6" value="0"></label>
+  <label>משקל לידה (גרם) <input id="sg-g" type="number" inputmode="numeric" min="0"></label>
+  <div id="sg-out" class="out"></div>
+  <details><summary>על הכלי</summary>
+    <p>טווח: 22+3 עד 42+3 שבועות. SGA מתחת לאחוזון 10, LGA מעל אחוזון 90. מבוסס על Fenton 2025 (גודל בלידה). הנתונים מקורבים ל-37 שבועות ומעלה, ולכן בני 37 ומעלה פחות מדויקים.</p></details>
+</section>
+<section id="bili" class="panel">
+  <h2>סף טיפול באור וחילוף דם</h2>
+  <label>שבוע לידה <input id="bili-w" type="number" inputmode="numeric" min="22" max="44"></label>
+  <label>ימים (0–6) <input id="bili-d" type="number" inputmode="numeric" min="0" max="6" value="0"></label>
+  <label>גיל התינוק בשעות <input id="bili-h" type="number" inputmode="numeric" min="0"></label>
+  <label class="chk"><input id="bili-rf" type="checkbox"> יש גורם סיכון נוירוטוקסי</label>
+  <details><summary>מהם גורמי הסיכון?</summary>
+    <p><b>35 שבועות ומעלה (AAP 2022):</b> אלבומין מתחת ל-3.0 g/dL; המוליזה (חיסונית, G6PD או אחרת); ספסיס; חוסר יציבות קלינית משמעותית ב-24 השעות האחרונות. (פגות כבר כלולה בעקומות.)</p>
+    <p><b>מתחת ל-35 שבועות (Stanford):</b> אלבומין מתחת ל-2.5 g/dL; עלייה מהירה של בילירובין המעידה על המוליזה; חוסר יציבות: pH מתחת ל-7.15, ספסיס מוכח בתרבית ב-24 שעות האחרונות, דום נשימה או ברדיקרדיה שדרשו החייאה, יתר לחץ דם שדרש לחץ דם, או הנשמה מכנית.</p></details>
+  <label>רמת בילירובין כוללת (mg/dL, לא חובה) <input id="bili-v" type="number" inputmode="decimal" step="0.1" min="0"></label>
+  <div id="bili-out" class="out"></div>
+</section>
+<section id="sepsis" class="panel">
+  <h2>סיכון לזיהום מוקדם (Kaiser 2024)</h2>
+  <p class="soon">מיועד ליילודים משבוע 35 ומעלה. גרסת 2024 מניחה שסקר GBS נעשה לכל היולדות; במקום שבו הסקר לא אוניברסלי, מומלץ להשתמש בגרסת 2017.</p>
+  <label>שכיחות זיהום מוקדם במחלקה (לאלף לידות חיות) <select id="sp-inc"></select></label>
+  <label>שבוע לידה <input id="sp-w" type="number" inputmode="numeric" min="34" max="43"></label>
+  <label>ימים (0–6) <input id="sp-d" type="number" inputmode="numeric" min="0" max="6" value="0"></label>
+  <label>חום אימהי מרבי <input id="sp-t" type="number" inputmode="decimal" step="0.1"></label>
+  <label>יחידת טמפרטורה <select id="sp-u"><option value="F">פרנהייט</option><option value="C">צלזיוס</option></select></label>
+  <label>משך ירידת מים (שעות) <input id="sp-rom" type="number" inputmode="decimal" step="0.1" min="0" max="240"></label>
+  <label>סטטוס GBS אימהי <select id="sp-gbs"><option value="">בחרי…</option><option value="neg">שלילי</option><option value="pos">חיובי</option><option value="unk">לא ידוע</option></select></label>
+  <label>אנטיביוטיקה במהלך הלידה <select id="sp-abx"><option value="">בחרי…</option>
+    <option value="broad4">רחבת טווח, 4 שעות ומעלה לפני הלידה</option>
+    <option value="broad2">רחבת טווח, 2 עד 3.9 שעות לפני הלידה</option>
+    <option value="gbs2">ספציפית ל-GBS (פניצילין, אמפיצילין או צפאזולין), 2 שעות ומעלה לפני הלידה</option>
+    <option value="none">אין, או כל אנטיביוטיקה פחות מ-2 שעות לפני הלידה</option></select></label>
+  <div id="sp-out" class="out"></div>
+  <details><summary>איך מסווגים את מצב התינוק?</summary>
+    <p><b>מחלה קלינית:</b> צורך מתמשך ב-NCPAP/HFNC/הנשמה מחוץ לחדר לידה; חוסר יציבות המודינמית הדורש תרופות וזואקטיביות; אנצפלופתיה או דיכוי סביב הלידה; פרכוס; אפגר בדקה 5 מתחת ל-5; צורך בחמצן מעל שעתיים (מחוץ לחדר לידה) לשמירת סטורציה מעל 90%.</p>
+    <p><b>גבולי:</b> חריגה פיזיולוגית מתמשכת מעל 4 שעות, או שתי חריגות או יותר שנמשכות מעל 2 שעות: דופק מעל 160, נשימות מעל 60, חום מעל 100.4°F או מתחת ל-97.5°F, מצוקה נשימתית (נחירות, פתיחת נחיריים, משיכות) בלי צורך בחמצן. החריגה יכולה להיות לסירוגין.</p>
+    <p><b>תקין:</b> אין חריגות פיזיולוגיות מתמשכות.</p></details>
+</section>
+</main>
+
+<footer>כלי עזר בלבד. ההחלטה הקלינית היא של הצוות ואינה מחליפה את נהלי המחלקה. הנתונים לא נשמרים ולא נשלחים.</footer>
+
+<script src="js/age.js"></script>
+<script src="js/pku.js"></script>
+<script src="js/bili-aap-data.js"></script>
+<script src="js/bili.js"></script>
+<script src="js/sepsis.js"></script>
+<script src="js/sga.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
