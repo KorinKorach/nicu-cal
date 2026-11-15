@@ -67,3 +67,5 @@ header .logo{width:40px;height:40px;border-radius:10px;display:block}
 header h1{direction:ltr;font-family:system-ui,"Segoe UI",Arial,sans-serif;letter-spacing:.2px}
 
 .keepnote{color:var(--blue);font-size:13px;margin:-4px 0 10px}
+
+footer .credit{display:inline-block;margin-top:6px;font-size:12px;color:#6B7A86}
