@@ -18,7 +18,7 @@
     now = now || new Date();
     const b = birth.getTime();
     const items = [
-      { key: "t1", title: "בדיקה ראשונה (תינוק שאוכל)", note: "בגיל 36 עד 72 שעות",
+      { key: "t1", title: "בדיקה ראשונה (עם כלכלה)", note: "בגיל 36 עד 72 שעות",
         start: new Date(b + 36 * HOUR), end: new Date(b + 72 * HOUR) },
       { key: "t2", title: "בדיקה שנייה", note: "בגיל 7 עד 10 ימים",
         start: new Date(b + 7 * 24 * HOUR), end: new Date(b + 10 * 24 * HOUR) },
