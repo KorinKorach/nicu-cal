@@ -8,7 +8,7 @@
     s = (s || "").trim();
     if (!s) return null;
     const m = s.match(/^(\d{1,2})(?:\s*[+.,]\s*(\d)|\s+(\d)\s*\/\s*7)?$/);
-    if (!m) return { error: "יש להזין שבוע ויום, למשל 36+3" };
+    if (!m) return { error: "יש להזין שבוע ויום, למשל 36+3 או 36.3" };
     const w = parseInt(m[1], 10), d = parseInt(m[2] !== undefined ? m[2] : m[3] !== undefined ? m[3] : "0", 10);
     if (d > 6) return { error: "הימים חייבים להיות בין 0 ל-6" };
     return { w: w, d: d };
