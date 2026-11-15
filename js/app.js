@@ -141,6 +141,7 @@
     const gbs = $("sp-gbs").value, abx = $("sp-abx").value;
     if (!ga || isNaN(t) || isNaN(rom) || !gbs || !abx) { out.textContent = ""; return; }
     if (ga.error) { out.innerHTML = err(ga.error); return; }
+    if (ga.w < 34) { out.textContent = ""; return; }
     t = t * 9 / 5 + 32; // המודל בפרנהייט
     const r = NT.sepsisRisk({ incidencePer1000: SP_INCIDENCE, gaWeeks: ga.w, gaDays: ga.d, tempF: t, romHours: rom, gbs: gbs, abx: abx });
     if (r.error) { out.innerHTML = err(r.error); return; }
@@ -153,10 +154,27 @@
       const gg = gaugeHtml([[lp(1), "#16A34A"], [lp(3), "#D97706"], [1, "#DC2626"]], lp(r[s[0]]), [[lp(1), "1"], [lp(3), "3"]]);
       html += '<div class="card ' + cls + '"><b>מצב התינוק: ' + s[1] + '</b>סיכון: <span class="big">' + f2(r[s[0]]) + "</span> לאלף" + gg + ACT[a2.action] + "<br><small>" + VIT[a2.vitals] + "</small></div>";
     });
-    if (ga.w < 35) html += '<p class="warn">המודל מיועד ל-35 שבועות ומעלה.</p>';
     out.innerHTML = html;
   }
   ["sp-ga", "sp-t", "sp-rom", "sp-gbs", "sp-abx"].forEach((i) => $(i).addEventListener("input", renderSepsis));
+  function spGaWarn() {
+    const ga = parseGA($("sp-ga").value), el = $("sp-gawarn");
+    let m = "", cls = "warn";
+    const low = !!(ga && !ga.error && ga.w < 34);
+    if (ga && !ga.error) {
+      if (low) { m = "המודל לא מיועד למתחת ל-34 שבועות"; cls = "warn red"; }
+      else if (ga.w === 34) { m = "המודל נבדק על 35 שבועות ומעלה"; cls = "warn amber"; }
+    }
+    el.textContent = m;
+    el.className = cls;
+    el.hidden = !m;
+    ["sp-t", "sp-rom", "sp-gbs", "sp-abx"].forEach(function (id) {
+      $(id).disabled = low;
+      $(id).closest("label").classList.toggle("off", low);
+    });
+    if (low) $("sp-out").textContent = "";
+  }
+  $("sp-ga").addEventListener("input", spGaWarn);
 
   // ---------- שמירת הגיל בין לשוניות ----------
   const SHARED_GA = ["age-ga", "bili-ga", "sg-ga", "sp-ga"], SHARED_H = ["age-h", "bili-h"];

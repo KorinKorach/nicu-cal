@@ -69,3 +69,8 @@ header h1{direction:ltr;font-family:system-ui,"Segoe UI",Arial,sans-serif;letter
 .keepnote{color:var(--blue);font-size:13px;margin:-4px 0 10px}
 
 footer .credit{display:inline-block;margin-top:6px;font-size:12px;color:#6B7A86}
+
+.warn.amber{color:#B45309;font-weight:500}
+.warn.red{color:#B91C1C;font-weight:500}
+label.off{color:#9AA7B2}
+input:disabled,select:disabled{background:#E8ECF0;color:#9AA7B2;border-color:#D5DDE5;cursor:not-allowed}
