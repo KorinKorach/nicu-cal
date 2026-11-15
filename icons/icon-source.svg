@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<rect width="512" height="512" fill="#0F766E"/>
+<g transform="translate(256 256) scale(0.78) translate(-256 -258)" fill="none" stroke="#FFFFFF" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+  <!-- calculator -->
+  <rect x="296" y="62" width="140" height="180" rx="20"/>
+  <rect x="316" y="82" width="100" height="42" rx="9" fill="#FFFFFF" stroke="none"/>
+  <g fill="#FFFFFF" stroke="none">
+    <rect x="318" y="142" width="26" height="26" rx="7"/><rect x="353" y="142" width="26" height="26" rx="7"/><rect x="388" y="142" width="26" height="26" rx="7" fill="#F5A524"/>
+    <rect x="318" y="178" width="26" height="26" rx="7"/><rect x="353" y="178" width="26" height="26" rx="7"/><rect x="388" y="178" width="26" height="26" rx="7"/>
+  </g>
+  <!-- baby -->
+  <circle cx="170" cy="250" r="46"/>
+  <path d="M155 250 q10 9 22 0" stroke-width="12"/>
+  <path d="M214 286 C262 276 336 290 352 330 C300 362 236 356 206 318"/>
+  <!-- hand -->
+  <path d="M84 318 C96 424 190 458 266 444 C334 430 380 388 396 326"/>
+  <path d="M84 318 C66 292 86 268 112 286"/>
+</g>
+</svg>

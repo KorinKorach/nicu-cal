@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<rect width="512" height="512" fill="#EAF6F3"/>
+<g transform="translate(256 256) scale(0.78) translate(-256 -258)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="296" y="62" width="140" height="180" rx="20" stroke="#15386B" stroke-width="16"/>
+  <rect x="316" y="82" width="100" height="42" rx="9" fill="#15386B"/>
+  <rect x="318" y="142" width="26" height="26" rx="7" fill="#15386B"/><rect x="353" y="142" width="26" height="26" rx="7" fill="#15386B"/><rect x="388" y="142" width="26" height="26" rx="7" fill="#F5A524"/>
+  <rect x="318" y="178" width="26" height="26" rx="7" fill="#15386B"/><rect x="353" y="178" width="26" height="26" rx="7" fill="#15386B"/><rect x="388" y="178" width="26" height="26" rx="7" fill="#15386B"/>
+  <g stroke="#0F766E" stroke-width="16">
+    <rect x="206" y="262" width="156" height="64" rx="32" transform="rotate(-6 284 294)" fill="#FDE3D8"/>
+    <circle cx="170" cy="250" r="46" fill="#FDE3D8"/>
+    <path d="M155 252 q10 9 22 0" stroke-width="12"/>
+    <path d="M84 318 C96 424 190 458 266 444 C334 430 380 388 396 326"/>
+    <path d="M84 318 C66 292 86 268 112 286"/>
+  </g>
+</g>
+</svg>
