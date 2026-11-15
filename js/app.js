@@ -157,4 +157,21 @@
     out.innerHTML = html;
   }
   ["sp-ga", "sp-t", "sp-rom", "sp-gbs", "sp-abx"].forEach((i) => $(i).addEventListener("input", renderSepsis));
+
+  // ---------- שמירת הגיל בין לשוניות ----------
+  const SHARED_GA = ["age-ga", "bili-ga", "sg-ga", "sp-ga"], SHARED_H = ["age-h", "bili-h"];
+  function syncFrom(srcId) {
+    if (!$("age-keep").checked) return;
+    const group = SHARED_GA.indexOf(srcId) >= 0 ? SHARED_GA : SHARED_H.indexOf(srcId) >= 0 ? SHARED_H : null;
+    if (!group) return;
+    const v = $(srcId).value;
+    group.forEach(function (id) {
+      if (id !== srcId && $(id).value !== v) { $(id).value = v; $(id).dispatchEvent(new Event("input")); }
+    });
+  }
+  SHARED_GA.concat(SHARED_H).forEach((id) => $(id).addEventListener("input", () => syncFrom(id)));
+  $("age-keep").addEventListener("change", function () {
+    document.querySelectorAll(".keepnote").forEach((n) => (n.hidden = !$("age-keep").checked));
+    if ($("age-keep").checked) { syncFrom("age-ga"); syncFrom("age-h"); }
+  });
 })();
