@@ -61,3 +61,7 @@ nav svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stro
 .src ul{margin:2px 0 8px;padding:0;list-style-position:inside}
 .src li{margin:2px 0;line-height:1.45}
 .src p.tight{margin-bottom:2px}
+
+header{justify-content:space-between;align-items:center}
+header .logo{width:40px;height:40px;border-radius:10px;display:block}
+header h1{direction:ltr;font-family:system-ui,"Segoe UI",Arial,sans-serif;letter-spacing:.2px}
