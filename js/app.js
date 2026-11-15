@@ -56,6 +56,17 @@
   }
   $("pku-birth").addEventListener("input", renderPku);
 
+  // סרגל כללי: zones=[[עד, צבע],...] לפי pos (0..1), marker=0..1, labels=[[pos,טקסט]]
+  function gaugeHtml(zones, marker, labels) {
+    let prev = 0, bar = "";
+    zones.forEach(function (z) { bar += '<i style="width:' + (z[0] - prev) * 100 + '%;background:' + z[1] + '"></i>'; prev = z[0]; });
+    let lab = "";
+    labels.forEach(function (l) { lab += '<span style="right:' + l[0] * 100 + '%">' + l[1] + "</span>"; });
+    const mk = marker === null ? "" : '<div class="gmark" style="right:calc(' + marker * 100 + '% - 1px)"></div>';
+    return '<div class="gauge"><div class="gbar">' + bar + mk + '</div><div class="glab">' + lab + "</div></div>";
+  }
+  const clamp01 = (x) => Math.max(0, Math.min(1, x));
+
   // ---------- SGA / LGA ----------
   function renderSga() {
     const out = $("sg-out"), sex = $("sg-sex").value, ga = parseGA($("sg-ga").value), g = parseFloat($("sg-g").value);
@@ -65,7 +76,9 @@
     if (r.error) { out.innerHTML = err(r.error); return; }
     const T = { SGA: ["bad", "קטן לגיל ההריון (SGA)"], AGA: ["ok", "גודל תקין לגיל ההריון (AGA)"], LGA: ["mid", "גדול לגיל ההריון (LGA)"] }[r.cls];
     const pct = r.percentile < 0.1 ? "פחות מ-0.1" : r.percentile > 99.9 ? "מעל 99.9" : r.percentile.toFixed(1);
-    let html = '<div class="card ' + T[0] + '"><b>' + T[1] + '</b>אחוזון: <span class="big">' + pct + '</span><br>Z-score: <span class="big">' + r.z.toFixed(2) + "</span></div>";
+    const zp = (z) => clamp01((z + 3) / 6);
+    const sgGauge = gaugeHtml([[zp(-1.2816), "#DC2626"], [zp(1.2816), "#16A34A"], [1, "#D97706"]], zp(r.z), [[zp(-1.2816), "10"], [zp(1.2816), "90"]]);
+    let html = '<div class="card ' + T[0] + '"><b>' + T[1] + '</b>' + sgGauge + 'אחוזון: <span class="big">' + pct + '</span><br>Z-score: <span class="big">' + r.z.toFixed(2) + "</span></div>";
     html += '<div class="card">למין ולשבוע הזה:<br>אחוזון 10: ' + Math.round(r.p10) + " גרם<br>חציון: " + Math.round(r.median) + " גרם<br>אחוזון 90: " + Math.round(r.p90) + " גרם</div>";
     if (r.beyond3) html += '<p class="warn">Z-score מעל ‎±3: הערך מקורב. בכלי המקורי נעשה תיקון נוסף בקצוות.</p>';
     out.innerHTML = html;
@@ -128,19 +141,20 @@
     const gbs = $("sp-gbs").value, abx = $("sp-abx").value;
     if (!ga || isNaN(t) || isNaN(rom) || !gbs || !abx) { out.textContent = ""; return; }
     if (ga.error) { out.innerHTML = err(ga.error); return; }
-    if ($("sp-u").value === "C") t = t * 9 / 5 + 32;
+    t = t * 9 / 5 + 32; // המודל בפרנהייט
     const r = NT.sepsisRisk({ incidencePer1000: SP_INCIDENCE, gaWeeks: ga.w, gaDays: ga.d, tempF: t, romHours: rom, gbs: gbs, abx: abx });
     if (r.error) { out.innerHTML = err(r.error); return; }
     const f2 = (x) => (Math.round(x * 100) / 100).toFixed(2);
     let html = '<div class="card"><b>סיכון בלידה (לאלף)</b><span class="big">' + f2(r.atBirth) + "</span></div>";
-    html += '<table class="t"><tr><th>מצב התינוק</th><th>סיכון</th><th>המלצה</th></tr>';
+    const lp = (x) => clamp01((Math.log10(Math.max(x, 0.03)) - Math.log10(0.03)) / (Math.log10(30) - Math.log10(0.03)));
     [["well", "תקין"], ["equivocal", "גבולי"], ["ill", "מחלה קלינית"]].forEach(function (s) {
-      const a = NT.sepsisAdvice(s[0], r[s[0]], r.atBirth);
-      html += "<tr><td>" + s[1] + "</td><td>" + f2(r[s[0]]) + "</td><td>" + ACT[a.action] + "<br><small>" + VIT[a.vitals] + "</small></td></tr>";
+      const a2 = NT.sepsisAdvice(s[0], r[s[0]], r.atBirth);
+      const cls = r[s[0]] >= 3 ? "bad" : r[s[0]] >= 1 ? "mid" : "ok";
+      const gg = gaugeHtml([[lp(1), "#16A34A"], [lp(3), "#D97706"], [1, "#DC2626"]], lp(r[s[0]]), [[lp(1), "1"], [lp(3), "3"]]);
+      html += '<div class="card ' + cls + '"><b>מצב התינוק: ' + s[1] + '</b>סיכון: <span class="big">' + f2(r[s[0]]) + "</span> לאלף" + gg + ACT[a2.action] + "<br><small>" + VIT[a2.vitals] + "</small></div>";
     });
-    html += "</table>";
     if (ga.w < 35) html += '<p class="warn">המודל מיועד ל-35 שבועות ומעלה.</p>';
     out.innerHTML = html;
   }
-  ["sp-ga", "sp-t", "sp-u", "sp-rom", "sp-gbs", "sp-abx"].forEach((i) => $(i).addEventListener("input", renderSepsis));
+  ["sp-ga", "sp-t", "sp-rom", "sp-gbs", "sp-abx"].forEach((i) => $(i).addEventListener("input", renderSepsis));
 })();

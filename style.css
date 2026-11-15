@@ -52,3 +52,12 @@ nav svg{width:22px;height:22px}
 .err{margin:8px 0}
 #home{background:transparent;border:0;padding:0}
 nav svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+.tiles{grid-template-columns:1fr !important;gap:10px}
+.tile{flex-direction:row;justify-content:flex-start;gap:16px;min-height:76px;padding:14px 18px;text-align:start;font-size:17px}
+.tile svg{width:38px;height:38px;flex:0 0 auto}
+.card .gauge{margin:10px 0 8px}
+
+.src ul{margin:2px 0 8px;padding:0;list-style-position:inside}
+.src li{margin:2px 0;line-height:1.45}
+.src p.tight{margin-bottom:2px}
