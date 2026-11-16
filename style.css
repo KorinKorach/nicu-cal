@@ -101,3 +101,9 @@ details.dt summary{font-weight:500}
 .dtout{margin:6px 0 2px;font-weight:500;color:var(--blue)}
 
 .stdnote{margin:8px 0 0;font-size:14px;color:#334}
+.lblrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}
+.lblrow .nowbtn{margin:0;padding:4px 14px;font-size:14px}
+.drugpick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.drugbtn{min-height:64px !important;justify-content:center !important;text-align:center !important}
+.drugbtn.sel{background:#EAF2FB;border-color:#15386B}
+.tile.alt{background:#EEF4FB;border:1.5px dashed #15386B;margin-top:8px}

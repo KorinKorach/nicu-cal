@@ -192,23 +192,30 @@
   }
   $("sp-ga").addEventListener("input", spGaWarn);
 
-  // ---------- שמירת הגיל בין לשוניות ----------
-  const SHARED_GA = ["age-ga", "bili-ga", "sg-ga", "sp-ga"], SHARED_H = ["age-h", "bili-h"];
-  const SHARED_BIRTH = ["age-birth", "bili-birth", "pku-birth"], SHARED_UNTIL = ["age-until", "bili-until"];
-  function syncFrom(srcId) {
-    if (!$("age-keep").checked) return;
-    const groups = [SHARED_GA, SHARED_H, SHARED_BIRTH, SHARED_UNTIL];
-    const group = groups.filter((g) => g.indexOf(srcId) >= 0)[0] || null;
-    if (!group) return;
-    const v = $(srcId).value;
-    group.forEach(function (id) {
-      if (id !== srcId && $(id).value !== v) { $(id).value = v; $(id).dispatchEvent(new Event("input")); }
-    });
+  // ---------- פרטי תינוק לכל החישובים ----------
+  const BABY_MAP = {
+    "baby-ga": ["age-ga", "bili-ga", "sg-ga", "sp-ga", "dr-ga"],
+    "baby-birth": ["age-birth", "bili-birth", "pku-birth"],
+    "baby-w": ["sg-g", "dr-w"],
+    "baby-sex": ["sg-sex"],
+  };
+  function babyPush(src) {
+    const v = $(src).value;
+    BABY_MAP[src].forEach(function (id) { $(id).value = v; $(id).dispatchEvent(new Event("input", { bubbles: true })); });
+    if (src === "baby-birth") {
+      const out = $("baby-out");
+      if (!v) { out.textContent = ""; return; }
+      const hrs = Math.floor((Date.now() - new Date(v).getTime()) / 3600000);
+      out.textContent = hrs < 0 ? "תאריך הלידה הוא בעתיד" : "גיל כרגע: " + hrs + " שעות (" + Math.floor(hrs / 24) + " ימים ו-" + (hrs % 24) + " שעות)";
+    }
   }
-  SHARED_GA.concat(SHARED_H, SHARED_BIRTH, SHARED_UNTIL).forEach((id) => $(id).addEventListener("input", () => syncFrom(id)));
-  $("age-keep").addEventListener("change", function () {
-    document.querySelectorAll(".keepnote").forEach((n) => (n.hidden = !$("age-keep").checked));
-    if ($("age-keep").checked) { ["age-ga", "age-h", "age-birth", "age-until"].forEach(syncFrom); }
+  Object.keys(BABY_MAP).forEach((id) => $(id).addEventListener("input", () => babyPush(id)));
+  $("baby-clear").addEventListener("click", function () {
+    Object.keys(BABY_MAP).forEach(function (id) {
+      $(id).value = ""; babyPush(id);
+    });
+    ["age-h", "bili-h", "age-until", "bili-until", "bili-v"].forEach(function (id) { $(id).value = ""; $(id).dispatchEvent(new Event("input", { bubbles: true })); });
+    $("baby-out").textContent = "";
   });
 
   // ---------- תרופות IV ----------
@@ -238,6 +245,7 @@
   function renderDrugs() {
     const out = $("dr-out"), drug = $("dr-drug").value, g = parseFloat($("dr-w").value);
     $("dr-ga-row").hidden = drug !== "gen";
+    $("dr-fields").hidden = !drug;
     if (!drug || isNaN(g)) { out.textContent = ""; return; }
     let r;
     if (drug === "amp") r = NT.ampicillin(g);
