@@ -258,9 +258,9 @@
     if (pure) h += row("נותנים לתינוק", ml(r.give) + ' מ"ל');
     h += '<button type="button" class="calcbtn" id="dr-toggle" aria-expanded="' + showSteps + '"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M8 15h2M12 15h2M8 18h2M12 18h4"/></svg><span>' + (showSteps ? "הסתר את החישוב" : "הצג את החישוב") + "</span></button>";
     h += '<div id="dr-steps"' + (showSteps ? "" : " hidden") + ">" + stepsHtml(drug, r) + "</div></div>";
-    if (drug === "gen") h += '<p class="warn">המינון לפי שבוע לידה, לתינוק בגיל 0 עד 7 ימים בלבד.</p>';
-    if (drug === "amp") h += '<p class="warn">המינון הסטנדרטי: 50 מ"ג/ק"ג למנה (לא מינון לדלקת קרום המוח).</p>';
-    h += '<p class="warn">יש לוודא תמיד מול ההוראה הרפואית.</p>';
+    if (drug === "gen") h += '<p class="warn">המינון מחושב לפי שבוע לידה, לתינוקות בגיל 0 עד 7 ימים בלבד.</p>';
+    if (drug === "amp") h += '<p class="warn">מחושב לפי המינון הסטנדרטי: 50 מ"ג/ק"ג למנה.</p>';
+    h += '<p class="warn">יש לוודא תמיד מול ההוראה הרפואית. המחשבון לא מחליף חישוב עצמאי.</p>';
     out.innerHTML = h;
   }
   $("dr-out").addEventListener("click", function (e) {

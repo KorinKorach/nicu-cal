@@ -99,3 +99,5 @@ details.dt{margin:6px 0 10px;border:1px solid var(--line);border-radius:10px;pad
 details.dt summary{font-weight:500}
 .nowbtn{margin:0 0 8px;padding:8px 14px;border:1px solid var(--line);border-radius:10px;background:#fff;color:#15386B;font-family:inherit;font-size:15px;cursor:pointer}
 .dtout{margin:6px 0 2px;font-weight:500;color:var(--blue)}
+
+.stdnote{margin:8px 0 0;font-size:14px;color:#334}
