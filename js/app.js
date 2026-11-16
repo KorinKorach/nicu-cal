@@ -245,7 +245,7 @@
     h += row("מינון ללא מאריך", mg(r.dose) + ' מ"ג');
     h += row("מינון עם מאריך", mg(r.withExt) + ' מ"ג');
     h += row("שואבים מהתרופה", ml(r.draw) + ' מ"ל');
-    h += row("משלימים בסליין", pure ? "ללא סליין (טהור)" : ml(r.saline) + ' מ"ל');
+    h += row("משלימים בסליין", pure ? "ללא סליין (PURE)" : ml(r.saline) + ' מ"ל');
     if (pure) h += row("נותנים לתינוק", ml(r.give) + ' מ"ל');
     h += '<button type="button" class="calcbtn" id="dr-toggle" aria-expanded="' + showSteps + '"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M8 15h2M12 15h2M8 18h2M12 18h4"/></svg><span>' + (showSteps ? "הסתר את החישוב" : "הצג את החישוב") + "</span></button>";
     h += '<div id="dr-steps"' + (showSteps ? "" : " hidden") + ">" + stepsHtml(drug, r) + "</div></div>";
