@@ -107,7 +107,14 @@
     const mk = v !== null && !isNaN(v) ? '<div class="gmark" style="right:calc(' + pct(v) + '% - 1px)"></div>' : "";
     return '<div class="gauge"><div class="gbar">' + bar + mk + '</div><div class="glab">' + lab + "</div></div>";
   }
-  function biliCard(title, r, v) {
+  function plateauNote(r, h) {
+    if (r.photoFrom === undefined || !(h >= 0)) return "";
+    const n = [];
+    if (h >= r.photoFrom) n.push("סף הפוטותרפיה בפלאטו: קבוע מגיל " + r.photoFrom + " שעות ואינו עולה עוד");
+    if (h >= r.exchFrom) n.push("סף חילוף הדם בפלאטו: קבוע מגיל " + r.exchFrom + " שעות ואינו עולה עוד");
+    return n.length ? '<p class="plateau">' + n.join("<br>") + "</p>" : "";
+  }
+  function biliCard(title, r, v, h) {
     let cls = "", status = "";
     if (v !== null && !isNaN(v)) {
       if (v >= r.exchange) { cls = "bad"; status = "בילירובין בסף חילוף דם או מעליו"; }
@@ -117,7 +124,7 @@
     return '<div class="card ' + cls + '"><b>' + title + "</b>" + (status ? "<b>" + status + "</b>" : "") +
       biliGauge(r, v) +
       'פוטותרפיה: <span class="big">' + num1(r.photo) + "</span> mg/dL<br>" +
-      'חילוף דם: <span class="big">' + num1(r.exchange) + "</span> mg/dL</div>";
+      'חילוף דם: <span class="big">' + num1(r.exchange) + "</span> mg/dL" + plateauNote(r, h) + (r.note ? '<p class="plateau">' + r.note + "</p>" : "") + "</div>";
   }
   function renderBili() {
     const out = $("bili-out"), ga = parseGA($("bili-ga").value), h = parseFloat($("bili-h").value);
@@ -128,13 +135,13 @@
     if (ga.w >= 35) {
       const r = NT.biliAAP(ga.w, h, rf);
       if (r.error) { out.innerHTML = err(r.error); return; }
-      html = biliCard("AAP 2022 (35 שבועות ומעלה)", r, v);
+      html = biliCard("AAP 2022 (35 שבועות ומעלה)", r, v, h);
     } else {
       const r = NT.biliPreterm(ga.w, ga.d, h, rf);
       if (r.error) { out.innerHTML = err(r.error); return; }
-      html = biliCard("Stanford Premie BiliRecs (פגים), גיל מצטבר " + wd(r.pma), r, v);
+      html = biliCard("Stanford Premie BiliRecs (פגים), גיל מצטבר " + wd(r.pma), r, v, h);
       r.warnings.forEach((x) => (html += '<p class="warn">' + x + "</p>"));
-      if (r.pma.weeks >= 35) html += biliCard("להשוואה: AAP 2022 כאילו נולד בשבוע 35", NT.biliAAP(35, h, rf), v);
+      if (r.pma.weeks >= 35) html += biliCard("להשוואה: AAP 2022 כאילו נולד בשבוע 35", NT.biliAAP(35, h, rf), v, h);
     }
     out.innerHTML = html;
   }
@@ -187,19 +194,21 @@
 
   // ---------- שמירת הגיל בין לשוניות ----------
   const SHARED_GA = ["age-ga", "bili-ga", "sg-ga", "sp-ga"], SHARED_H = ["age-h", "bili-h"];
+  const SHARED_BIRTH = ["age-birth", "bili-birth", "pku-birth"], SHARED_UNTIL = ["age-until", "bili-until"];
   function syncFrom(srcId) {
     if (!$("age-keep").checked) return;
-    const group = SHARED_GA.indexOf(srcId) >= 0 ? SHARED_GA : SHARED_H.indexOf(srcId) >= 0 ? SHARED_H : null;
+    const groups = [SHARED_GA, SHARED_H, SHARED_BIRTH, SHARED_UNTIL];
+    const group = groups.filter((g) => g.indexOf(srcId) >= 0)[0] || null;
     if (!group) return;
     const v = $(srcId).value;
     group.forEach(function (id) {
       if (id !== srcId && $(id).value !== v) { $(id).value = v; $(id).dispatchEvent(new Event("input")); }
     });
   }
-  SHARED_GA.concat(SHARED_H).forEach((id) => $(id).addEventListener("input", () => syncFrom(id)));
+  SHARED_GA.concat(SHARED_H, SHARED_BIRTH, SHARED_UNTIL).forEach((id) => $(id).addEventListener("input", () => syncFrom(id)));
   $("age-keep").addEventListener("change", function () {
     document.querySelectorAll(".keepnote").forEach((n) => (n.hidden = !$("age-keep").checked));
-    if ($("age-keep").checked) { syncFrom("age-ga"); syncFrom("age-h"); }
+    if ($("age-keep").checked) { ["age-ga", "age-h", "age-birth", "age-until"].forEach(syncFrom); }
   });
 
   // ---------- תרופות IV ----------
@@ -216,7 +225,7 @@
     } else {
       h += "<li>מינון עם מאריך: " + mg(r.dose) + " × 5 ÷ 4 = <b>" + mg(r.withExt) + ' מ"ג</b></li>';
       if (drug === "amp") {
-        h += '<li>מדללים את הבקבוקון (1000 מ"ג) ב-5 מ"ל סליין: 200 מ"ג למ"ל</li>';
+        h += '<li>מדללים את הבקבוקון (1000 מ"ג) ב-5 מ"ל מים להזרקה: 200 מ"ג למ"ל</li>';
         h += "<li>שואבים תרופה: " + mg(r.withExt) + ' ÷ 200 = <b>' + ml(r.draw) + ' מ"ל</b></li>';
       } else {
         h += '<li>שואבים תרופה (3 מ"ג למ"ל): ' + mg(r.withExt) + ' ÷ 3 = <b>' + ml(r.draw) + ' מ"ל</b></li>';
@@ -250,6 +259,7 @@
     h += '<button type="button" class="calcbtn" id="dr-toggle" aria-expanded="' + showSteps + '"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M8 15h2M12 15h2M8 18h2M12 18h4"/></svg><span>' + (showSteps ? "הסתר את החישוב" : "הצג את החישוב") + "</span></button>";
     h += '<div id="dr-steps"' + (showSteps ? "" : " hidden") + ">" + stepsHtml(drug, r) + "</div></div>";
     if (drug === "gen") h += '<p class="warn">המינון לפי שבוע לידה, לתינוק בגיל 0 עד 7 ימים בלבד.</p>';
+    if (drug === "amp") h += '<p class="warn">המינון הסטנדרטי: 50 מ"ג/ק"ג למנה (לא מינון לדלקת קרום המוח).</p>';
     h += '<p class="warn">יש לוודא תמיד מול ההוראה הרפואית.</p>';
     out.innerHTML = h;
   }
@@ -257,4 +267,31 @@
     if (e.target.closest("#dr-toggle")) { showSteps = !showSteps; renderDrugs(); }
   });
   ["dr-drug", "dr-w", "dr-ga"].forEach((i) => $(i).addEventListener("input", renderDrugs));
+
+  // ---------- חישוב גיל לפי תאריך ושעה ----------
+  const pad = (n) => String(n).padStart(2, "0");
+  function nowLocal() {
+    const d = new Date();
+    return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) + "T" + pad(d.getHours()) + ":" + pad(d.getMinutes());
+  }
+  function dtCalc(p, hoursId) {
+    const b = $(p + "-birth").value, u = $(p + "-until").value, out = $(p + "-dtout");
+    if (!b) { out.textContent = ""; return; }
+    const t0 = new Date(b).getTime(), t1 = u ? new Date(u).getTime() : Date.now();
+    if (t1 < t0) { out.innerHTML = '<span class="err">התאריך הרצוי הוא לפני הלידה</span>'; return; }
+    const hrs = Math.floor((t1 - t0) / 3600000);
+    out.textContent = "גיל: " + hrs + " שעות (" + Math.floor(hrs / 24) + " ימים ו-" + (hrs % 24) + " שעות)" + (u ? "" : ", עד עכשיו");
+    $(hoursId).value = hrs;
+    $(hoursId).dispatchEvent(new Event("input", { bubbles: true }));
+  }
+  [["age", "age-h"], ["bili", "bili-h"]].forEach(function (x) {
+    ["-birth", "-until"].forEach((s) => $(x[0] + s).addEventListener("input", () => dtCalc(x[0], x[1])));
+  });
+  document.querySelectorAll(".nowbtn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      const t = $(btn.dataset.now);
+      t.value = nowLocal();
+      t.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+  });
 })();

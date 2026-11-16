@@ -43,6 +43,12 @@
   <h2>גיל מתוקן וגיל הריון מצטבר</h2>
   <label>שבוע לידה (שבוע ויום) <input id="age-ga" class="ga" type="text" inputmode="decimal" placeholder="36+3 או 36.3" autocomplete="off"></label>
   <label>גיל התינוק בשעות <input id="age-h" type="number" inputmode="numeric" min="0"></label>
+  <details class="dt"><summary>חישוב הגיל לפי תאריך ושעה</summary>
+    <label>תאריך ושעת לידה <input id="age-birth" type="datetime-local"></label>
+    <label>תאריך ושעה רצויים (ללא הזנה: עכשיו) <input id="age-until" type="datetime-local"></label>
+    <button type="button" class="nowbtn" data-now="age-until">נוכחי</button>
+    <p class="dtout" id="age-dtout"></p>
+  </details>
   <label class="chk"><input id="age-keep" type="checkbox"> שמור את המידע ללשוניות הבאות</label>
   <div id="age-out" class="out"></div>
   <details class="src"><summary>מקור והערות</summary>
@@ -79,9 +85,15 @@
   <p class="keepnote" hidden>הגיל נשמר מלשונית גיל מתוקן. אפשר לבטל שם.</p>
   <label>שבוע לידה (שבוע ויום) <input id="bili-ga" class="ga" type="text" inputmode="decimal" placeholder="36+3 או 36.3" autocomplete="off"></label>
   <label>גיל התינוק בשעות <input id="bili-h" type="number" inputmode="numeric" min="0"></label>
-  <label class="chk"><input id="bili-rf" type="checkbox"> יש גורם סיכון נוירוטוקסי</label>
+  <details class="dt"><summary>חישוב הגיל לפי תאריך ושעה</summary>
+    <label>תאריך ושעת לידה <input id="bili-birth" type="datetime-local"></label>
+    <label>תאריך ושעה רצויים (ללא הזנה: עכשיו) <input id="bili-until" type="datetime-local"></label>
+    <button type="button" class="nowbtn" data-now="bili-until">נוכחי</button>
+    <p class="dtout" id="bili-dtout"></p>
+  </details>
+  <label class="chk"><input id="bili-rf" type="checkbox"> יש גורם סיכון נוירוטוקסי (לא כולל פגות)</label>
   <details><summary>מהם גורמי הסיכון?</summary>
-    <p><b>35 שבועות ומעלה (AAP 2022):</b> אלבומין מתחת ל-3.0 g/dL; המוליזה (חיסונית, G6PD או אחרת); ספסיס; חוסר יציבות קלינית משמעותית ב-24 השעות האחרונות. (פגות כבר כלולה בעקומות.)</p>
+    <p><b>35 שבועות ומעלה (AAP 2022):</b> אלבומין מתחת ל-3.0 g/dL; המוליזה (חיסונית, G6PD או אחרת); ספסיס; חוסר יציבות קלינית משמעותית ב-24 השעות האחרונות. פגות עצמה כבר כלולה בעקומות לפי שבוע הלידה, ולכן אין לסמן אותה כגורם סיכון.</p>
     <p><b>מתחת ל-35 שבועות (Stanford):</b> אלבומין מתחת ל-2.5 g/dL; עלייה מהירה של בילירובין המעידה על המוליזה; חוסר יציבות: pH מתחת ל-7.15, ספסיס מוכח בתרבית ב-24 שעות האחרונות, דום נשימה או ברדיקרדיה שדרשו החייאה, יתר לחץ דם שדרש לחץ דם, או הנשמה מכנית.</p></details>
   <label>רמת בילירובין כוללת (mg/dL, לא חובה) <input id="bili-v" type="number" inputmode="decimal" step="0.1" min="0"></label>
   <div id="bili-out" class="out"></div>
@@ -125,10 +137,10 @@
   <label id="dr-ga-row" hidden>שבוע לידה (שבוע ויום) <input id="dr-ga" class="ga" type="text" inputmode="decimal" placeholder="36+3 או 36.3" autocomplete="off"></label>
   <div id="dr-out" class="out"></div>
   <details class="src"><summary>מקור והערות</summary>
-    <p>הנוסחאות לפי נוהל המחלקה. הנפחים מוצגים בחיתוך לשתי ספרות אחרי הנקודה (לא בעיגול).</p>
-    <p>אמפיצילין: 50 מ"ג/ק"ג. בקבוקון 1000 מ"ג מומס ב-5 מ"ל סליין (200 מ"ג למ"ל).</p>
-    <p>גנטמיצין: מינון לפי שבוע לידה, לתינוק בגיל 0 עד 7 ימים בלבד: עד שבוע 29 – 5 מ"ג/ק"ג; 30 עד 34+6 – 4.5 מ"ג/ק"ג; 35 ומעלה – 4 מ"ג/ק"ג. התרופה מגיעה מוכנה בריכוז 3 מ"ג למ"ל. אם המינון הוא 12 מ"ג ומעלה (4 מ"ל ומעלה), מכינים טהור (PURE) ומוסיפים 3 מ"ג למאריך, בלי סליין.</p>
-    <p>החישוב כולל מאריך של 1 מ"ל, כי החומר שבמאריך לא ניתן לתינוק.</p></details>
+    <p>ריכוזי התרופות והכנת הבקבוקון: עלוני הרופא ב<a href="https://registries.health.gov.il/Medicines" target="_blank" rel="noopener">מאגר התרופות של משרד הבריאות</a> (Penibrin 1 גרם, Gentamicin B. Braun 3 מ"ג/מ"ל).</p>
+    <p>אמפיצילין: 50 מ"ג/ק"ג למנה, המינון הסטנדרטי (לא מינון לדלקת קרום המוח). לפי <a href="https://lhsc.on.ca/nicu/ampicillin" target="_blank" rel="noopener">NICU Medication Manual של London Health Sciences Centre</a>. בקבוקון 1000 מ"ג מומס ב-5 מ"ל מים להזרקה (200 מ"ג למ"ל), והסליין משמש להשלמה ל-5 מ"ל.</p>
+    <p>גנטמיצין: מינון לפי שבוע לידה, לתינוק בגיל 0 עד 7 ימים בלבד: עד שבוע 29 – 5 מ"ג/ק"ג; 30 עד 34+6 – 4.5 מ"ג/ק"ג; 35 ומעלה – 4 מ"ג/ק"ג. לפי טבלת המחלקה. התרופה מגיעה מוכנה בריכוז 3 מ"ג למ"ל. אם המינון הוא 12 מ"ג ומעלה (4 מ"ל ומעלה), מכינים טהור (PURE) ומוסיפים 3 מ"ג למאריך, בלי סליין.</p>
+    <p>חישוב המאריך (1 מ"ל): נוהל מחלקתי. החומר שבמאריך לא ניתן לתינוק. הנפחים מוצגים בחיתוך לשתי ספרות אחרי הנקודה (לא בעיגול).</p></details>
 </section>
 </main>
 

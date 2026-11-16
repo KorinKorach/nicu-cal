@@ -9,19 +9,35 @@
     return i >= arr.length ? arr[arr.length - 1] : arr[i];
   }
 
+  // גיל (בשעות) שממנו הסף קבוע (פלאטו). אם יש הערת שוליים בטבלה של AAP משתמשים בה, אחרת לפי הטבלה עצמה.
+  const FOOT = {
+    photoNoRF: { "40+": 96, "39": 157, "38": 325 },
+    photoRF: { "38+": 96, "37": 151 },
+    exchNoRF: { "38+": 96, "37": 151 },
+  };
+  function plateauFrom(arr, foot) {
+    if (foot !== undefined) return foot;
+    const last = arr[arr.length - 1];
+    let i = arr.length - 1;
+    while (i > 0 && arr[i - 1] === last) i--;
+    return i;
+  }
+
   // ga: שבוע לידה שלם (35 ומעלה). rf: יש גורם סיכון נוירוטוקסי נוסף (מעבר לפגות).
   NT.biliAAP = function (ga, ageHours, rf) {
     ga = Math.floor(ga);
     if (ga < 35) return { error: "מתחת ל-35 שבועות משתמשים בחישוב הפגים" };
     if (!(ageHours >= 0)) return { error: "יש להזין גיל בשעות" };
     const A = NT.AAP;
-    const photoTab = rf ? A.photoRF : A.photoNoRF;
-    const exchTab = rf ? A.exchRF : A.exchNoRF;
+    const photoName = rf ? "photoRF" : "photoNoRF", exchName = rf ? "exchRF" : "exchNoRF";
     const photoKey = ga >= (rf ? 38 : 40) ? (rf ? "38+" : "40+") : String(ga);
     const exchKey = ga >= 38 ? "38+" : String(ga);
+    const photoArr = A[photoName][photoKey], exchArr = A[exchName][exchKey];
     return {
-      photo: at(photoTab[photoKey], ageHours),
-      exchange: at(exchTab[exchKey], ageHours),
+      photo: at(photoArr, ageHours),
+      exchange: at(exchArr, ageHours),
+      photoFrom: plateauFrom(photoArr, (FOOT[photoName] || {})[photoKey]),
+      exchFrom: plateauFrom(exchArr, (FOOT[exchName] || {})[exchKey]),
     };
   };
 
@@ -50,12 +66,13 @@
     if (pma < 27 * 7) return { error: "הכלי מיועד לגיל מצטבר 27 שבועות ומעלה" };
     const warnings = [];
     if (ageHours < 48) warnings.push("הכלי לא מיועד לתינוקות מתחת ל-48 שעות");
-    if (pma >= 35 * 7) warnings.push("גיל מצטבר 35 שבועות ומעלה: יש להשוות גם ל-AAP 2022 כאילו נולד בשבוע 35");
+    const note = pma >= 35 * 7 ? "הסף בפלאטו: מגיל מצטבר 35 שבועות הערכים של Stanford לא עולים עוד, כי הכלי מסתיים ב-35 שבועות. להמשך יש להסתמך על AAP 2022 (למטה)." : "";
     return {
       pma: { weeks: Math.floor(pma / 7), days: pma % 7 },
       photo: r1(interp(rf ? ANCHORS.photoRF : ANCHORS.photoNoRF, pma)),
       exchange: r1(interp(rf ? ANCHORS.exchRF : ANCHORS.exchNoRF, pma)),
       warnings: warnings,
+      note: note,
     };
   };
 })(typeof window !== "undefined" ? window : globalThis);
