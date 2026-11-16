@@ -16,9 +16,18 @@
 
   function show(tab) {
     document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("on", p.id === tab));
-    document.querySelectorAll("#tabs button").forEach((b) => b.classList.toggle("on", b.dataset.tab === tab));
     window.scrollTo(0, 0);
   }
+  // חץ חזרה לדף הבית בראש כל מחשבון
+  document.querySelectorAll(".panel:not(#home)").forEach(function (p) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "back";
+    b.dataset.tab = "home";
+    b.setAttribute("aria-label", "חזרה לדף הבית");
+    b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+    p.insertBefore(b, p.firstChild);
+  });
   document.querySelectorAll("[data-tab]").forEach((el) => el.addEventListener("click", () => show(el.dataset.tab)));
 
   // ---------- גיל מתוקן ----------
@@ -192,4 +201,60 @@
     document.querySelectorAll(".keepnote").forEach((n) => (n.hidden = !$("age-keep").checked));
     if ($("age-keep").checked) { syncFrom("age-ga"); syncFrom("age-h"); }
   });
+
+  // ---------- תרופות IV ----------
+  const mg = (x) => (Math.round(x * 1000) / 1000).toString();
+  const ml = (x) => x.toFixed(2);
+  let showSteps = false;
+  function stepsHtml(drug, r) {
+    const kg = mg(r.kg);
+    let h = '<ol class="steps"><li>מינון לתינוק: ' + mg(r.perKg) + " × " + kg + " = <b>" + mg(r.dose) + ' מ"ג</b></li>';
+    if (drug === "gen" && r.mode === "pure") {
+      h += '<li>מוסיפים 3 מ"ג למאריך (1 מ"ל): ' + mg(r.dose) + " + 3 = <b>" + mg(r.withExt) + ' מ"ג</b></li>';
+      h += "<li>שואבים תרופה טהורה (PURE): " + mg(r.withExt) + ' ÷ 3 = <b>' + ml(r.draw) + ' מ"ל</b></li>';
+      h += "<li>נותנים לתינוק: " + mg(r.dose) + ' ÷ 3 = <b>' + ml(r.give) + ' מ"ל</b></li>';
+    } else {
+      h += "<li>מינון עם מאריך: " + mg(r.dose) + " × 5 ÷ 4 = <b>" + mg(r.withExt) + ' מ"ג</b></li>';
+      if (drug === "amp") {
+        h += '<li>מדללים את הבקבוקון (1000 מ"ג) ב-5 מ"ל סליין: 200 מ"ג למ"ל</li>';
+        h += "<li>שואבים תרופה: " + mg(r.withExt) + ' ÷ 200 = <b>' + ml(r.draw) + ' מ"ל</b></li>';
+      } else {
+        h += '<li>שואבים תרופה (3 מ"ג למ"ל): ' + mg(r.withExt) + ' ÷ 3 = <b>' + ml(r.draw) + ' מ"ל</b></li>';
+      }
+      h += '<li>משלימים בסליין: 5 − ' + ml(r.draw) + ' = <b>' + ml(r.saline) + ' מ"ל</b> (סה"כ 5 מ"ל)</li>';
+      h += '<li>נותנים לתינוק: <b>4 מ"ל</b> (' + mg(r.dose) + ' מ"ג)</li>';
+    }
+    return h + "</ol>";
+  }
+  function renderDrugs() {
+    const out = $("dr-out"), drug = $("dr-drug").value, g = parseFloat($("dr-w").value);
+    $("dr-ga-row").hidden = drug !== "gen";
+    if (!drug || isNaN(g)) { out.textContent = ""; return; }
+    let r;
+    if (drug === "amp") r = NT.ampicillin(g);
+    else {
+      const ga = parseGA($("dr-ga").value);
+      if (!ga) { out.textContent = ""; return; }
+      if (ga.error) { out.innerHTML = err(ga.error); return; }
+      r = NT.gentamicin(g, ga.w);
+    }
+    if (r.error) { out.innerHTML = err(r.error); return; }
+    const pure = drug === "gen" && r.mode === "pure";
+    const row = (k, v) => '<div class="rrow"><span>' + k + "</span><b>" + v + "</b></div>";
+    let h = '<div class="card"><b class="ctitle">' + (drug === "amp" ? "אמפיצילין" : "גנטמיצין") + " – משקל " + mg(r.kg) + ' ק"ג</b>';
+    h += row("מינון ללא מאריך", mg(r.dose) + ' מ"ג');
+    h += row("מינון עם מאריך", mg(r.withExt) + ' מ"ג');
+    h += row("שואבים מהתרופה", ml(r.draw) + ' מ"ל');
+    h += row("משלימים בסליין", pure ? "ללא סליין (טהור)" : ml(r.saline) + ' מ"ל');
+    if (pure) h += row("נותנים לתינוק", ml(r.give) + ' מ"ל');
+    h += '<button type="button" class="calcbtn" id="dr-toggle" aria-expanded="' + showSteps + '"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M8 15h2M12 15h2M8 18h2M12 18h4"/></svg><span>' + (showSteps ? "הסתר את החישוב" : "הצג את החישוב") + "</span></button>";
+    h += '<div id="dr-steps"' + (showSteps ? "" : " hidden") + ">" + stepsHtml(drug, r) + "</div></div>";
+    if (drug === "gen") h += '<p class="warn">המינון לפי שבוע לידה, לתינוק בגיל 0 עד 7 ימים בלבד.</p>';
+    h += '<p class="warn">יש לוודא תמיד מול ההוראה הרפואית.</p>';
+    out.innerHTML = h;
+  }
+  $("dr-out").addEventListener("click", function (e) {
+    if (e.target.closest("#dr-toggle")) { showSteps = !showSteps; renderDrugs(); }
+  });
+  ["dr-drug", "dr-w", "dr-ga"].forEach((i) => $(i).addEventListener("input", renderDrugs));
 })();

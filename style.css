@@ -74,3 +74,21 @@ footer .credit{display:inline-block;margin-top:6px;font-size:12px;color:#6B7A86}
 .warn.red{color:#B91C1C;font-weight:500}
 label.off{color:#9AA7B2}
 input:disabled,select:disabled{background:#E8ECF0;color:#9AA7B2;border-color:#D5DDE5;cursor:not-allowed}
+
+body{padding-bottom:16px !important}
+.back{display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin:-4px 0 6px;padding:0;border:1px solid var(--line);border-radius:50%;background:#fff;color:#15386B;cursor:pointer}
+.back svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+.steps{margin:8px 0 0;padding-inline-start:20px;line-height:1.7}
+.steps li{margin:4px 0}
+.big2{font-size:18px;color:var(--blue)}
+.steps b{display:inline}
+[hidden]{display:none !important}
+
+.rrow{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;border-top:1px solid var(--line)}
+.rrow:first-of-type{border-top:0}
+.rrow b{display:inline;font-size:19px;color:var(--blue);white-space:nowrap}
+.card b.ctitle{margin-bottom:6px}
+.calcbtn{display:flex;align-items:center;gap:8px;margin-top:10px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:#15386B;font-family:inherit;font-size:14px;cursor:pointer}
+.calcbtn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#dr-steps{margin-top:6px;font-size:14px}
