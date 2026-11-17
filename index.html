@@ -129,7 +129,7 @@
 </section>
 <section id="drugs" class="panel">
   <h2>חישוב תרופות IV</h2>
-  <label>תרופה <select id="dr-drug"><option value="">בחרו…</option><option value="amp">אמפיצילין</option><option value="gen">גנטמיצין</option></select></label>
+  <label>תרופה <select id="dr-drug"><option value="">בחרו…</option><option value="amp">אמפיצילין</option><option value="cef">צפוטקסים (קלפורן)</option><option value="gen">גנטמיצין</option></select></label>
   <div id="dr-fields" hidden>
   <label>משקל לידה (בגרמים, למשל 3000) <input id="dr-w" type="number" inputmode="numeric" min="0"></label>
   <label id="dr-ga-row" hidden>שבוע לידה (שבוע ויום) <input id="dr-ga" class="ga" type="text" inputmode="decimal" placeholder="36+3 או 36.3" autocomplete="off"></label>
@@ -138,6 +138,7 @@
   <details class="src"><summary>מקור והערות</summary>
     <p>ריכוזי התרופות והכנת הבקבוקון: עלוני הרופא ב<a href="https://registries.health.gov.il/Medicines" target="_blank" rel="noopener">מאגר התרופות של משרד הבריאות</a> (Penibrin 1 גרם, Gentamicin B. Braun 3 מ"ג/מ"ל).</p>
     <p>אמפיצילין: 50 מ"ג/ק"ג למנה, המינון הסטנדרטי במחלקה (לא מינון לדלקת קרום המוח), בהתאם ל-<a href="https://lhsc.on.ca/nicu/ampicillin" target="_blank" rel="noopener">NICU Medication Manual של London Health Sciences Centre</a> לגיל 0 עד 7 ימים. בקבוקון 1000 מ"ג מומס ב-5 מ"ל מים להזרקה (200 מ"ג למ"ל), והסליין משמש להשלמה ל-5 מ"ל.</p>
+    <p>צפוטקסים (קלפורן): מינון כמו אמפיצילין, 50 מ"ג/ק"ג למנה, לפי נוהל המחלקה. הכנת הבקבוקון לפי עלון הרופא (Cefotaxime Medo 1 גר'): בקבוקון 1000 מ"ג מומס ב-4 מ"ל מים להזרקה, נפח סופי כ-4.5 מ"ל. שימו לב: בעלון הרופא המינון ליילוד כתוב כ-50 מ"ג/ק"ג ליממה בחלוקה ל-2 עד 4 מנות, ואילו כאן מחושבים 50 מ"ג/ק"ג למנה לפי הנוהל המחלקתי.</p>
     <p>גנטמיצין: מינון לפי שבוע לידה, לתינוק בגיל 0 עד 7 ימים בלבד: עד שבוע 29 – 5 מ"ג/ק"ג; 30 עד 34+6 – 4.5 מ"ג/ק"ג; 35 ומעלה – 4 מ"ג/ק"ג. לפי טבלת המחלקה. התרופה מגיעה מוכנה בריכוז 3 מ"ג למ"ל. אם המינון הוא 12 מ"ג ומעלה (4 מ"ל ומעלה), מכינים טהור (PURE) ומוסיפים 3 מ"ג למאריך, בלי סליין.</p>
     <p>חישוב המאריך (1 מ"ל): נוהל מחלקתי. החומר שבמאריך לא ניתן לתינוק. הנפחים מוצגים בחיתוך לשתי ספרות אחרי הנקודה (לא בעיגול).</p></details>
 </section>
@@ -152,6 +153,17 @@
   <button type="button" class="nowbtn" id="baby-clear">ניקוי כל הפרטים</button>
 </section>
 </main>
+<div id="calc" class="calcmodal" hidden><div class="calcbox" dir="ltr">
+  <div id="calc-disp" class="calcdisp">0</div>
+  <div id="calc-keys" class="calckeys">
+    <button class="fn">C</button><button class="fn">⌫</button><button class="op">÷</button><button class="op">×</button>
+    <button>7</button><button>8</button><button>9</button><button class="op">−</button>
+    <button>4</button><button>5</button><button>6</button><button class="op">+</button>
+    <button>1</button><button>2</button><button>3</button><button class="eq" style="grid-row:span 2">=</button>
+    <button style="grid-column:span 2">0</button><button>.</button>
+  </div>
+  <button type="button" id="calc-close" class="nowbtn" style="width:100%;margin:10px 0 0">סגירה</button>
+</div></div>
 
 <footer>כלי עזר בלבד. ההוראה הרפואית היא הקובעת. הנתונים לא נשמרים ולא נשלחים.<br><span class="credit">נבנה על ידי קורין קורח בעזרת Claude Code</span></footer>
 

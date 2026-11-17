@@ -25,6 +25,17 @@
     return { kg: w.kg, perKg: 50, dose: dose, withExt: withExt, draw: draw, saline: saline, give: 4 };
   };
 
+  // קלפורן (צפוטקסים): אותו חישוב כמו אמפיצילין. בקבוקון 1000 מ"ג מומס ב-4 מ"ל מים להזרקה, נפח סופי 4.5 מ"ל
+  NT.cefotaxime = function (grams) {
+    const w = weightKg(grams);
+    if (w.error) return { error: w.error };
+    const dose = 50 * w.kg;
+    const withExt = (dose * 5) / 4;
+    const draw = cut2((withExt * 4.5) / 1000);
+    const saline = cut2(5 - draw);
+    return { kg: w.kg, perKg: 50, dose: dose, withExt: withExt, draw: draw, saline: saline, give: 4 };
+  };
+
   // גנטמיצין: מינון לפי שבוע לידה (שורת 0-7 ימים), ריכוז 3 מ"ג/מ"ל מוכן
   NT.gentamicin = function (grams, gaWeeks) {
     const w = weightKg(grams);
