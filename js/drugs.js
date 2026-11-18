@@ -8,9 +8,9 @@
 
   // משקל בגרמים. מחזיר { kg } או { error }
   function weightKg(grams) {
-    if (!(grams > 0)) return { error: "יש להזין משקל בגרמים" };
-    if (grams < 100) return { error: "המשקל מוזן בגרמים (למשל 3000), לא בקילוגרמים" };
-    if (grams < 400 || grams > 6000) return { error: "המשקל לא סביר (400 עד 6000 גרם). יש לבדוק את ההזנה" };
+    if (!(grams > 0)) return { error: "יש להזין משקל בקילוגרמים" };
+    if (grams < 100) return { error: "המשקל לא סביר. יש להזין בקילוגרמים, למשל 3.3" };
+    if (grams < 400 || grams > 6000) return { error: 'המשקל לא סביר (0.4 עד 6 ק"ג). יש לבדוק את ההזנה' };
     return { kg: grams / 1000 };
   }
 

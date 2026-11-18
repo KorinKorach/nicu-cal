@@ -115,3 +115,4 @@ details.dt summary{font-weight:500}
 .calckeys{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
 .calckeys button{padding:14px 0;font-size:22px;border:1px solid var(--line);border-radius:10px;background:#fff;font-family:inherit;cursor:pointer}
 .calckeys .op{background:#EEF4FB;color:#15386B}.calckeys .fn{background:#F1F5F9}.calckeys .eq{background:#15386B;color:#fff}
+.steps .m{unicode-bidi:isolate}

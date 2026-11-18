@@ -70,7 +70,7 @@
   <h2>אחוזון משקל</h2>
   <label>מין <select id="sg-sex"><option value="">בחרו…</option><option value="m">זכר</option><option value="f">נקבה</option></select></label>
   <label>שבוע לידה (שבוע ויום) <input id="sg-ga" class="ga" type="text" inputmode="decimal" placeholder="36+3 או 36.3" autocomplete="off"></label>
-  <label>משקל לידה (גרם) <input id="sg-g" type="number" inputmode="numeric" min="0"></label>
+  <label>משקל לידה (בק"ג, למשל 3.3) <input id="sg-g" type="number" inputmode="decimal" step="0.001" min="0"></label>
   <div id="sg-out" class="out"></div>
   <details class="src"><summary>מקור והערות</summary>
     <p>טווח: 22+3 עד 42+3 שבועות</p>
@@ -130,10 +130,8 @@
 <section id="drugs" class="panel">
   <h2>חישוב תרופות IV</h2>
   <label>תרופה <select id="dr-drug"><option value="">בחרו…</option><option value="amp">אמפיצילין</option><option value="cef">צפוטקסים (קלפורן)</option><option value="gen">גנטמיצין</option></select></label>
-  <div id="dr-fields" hidden>
-  <label>משקל לידה (בגרמים, למשל 3000) <input id="dr-w" type="number" inputmode="numeric" min="0"></label>
+  <label>משקל (בק"ג, למשל 3.3) <input id="dr-w" type="number" inputmode="decimal" step="0.001" min="0"></label>
   <label id="dr-ga-row" hidden>שבוע לידה (שבוע ויום) <input id="dr-ga" class="ga" type="text" inputmode="decimal" placeholder="36+3 או 36.3" autocomplete="off"></label>
-  </div>
   <div id="dr-out" class="out"></div>
   <details class="src"><summary>מקור והערות</summary>
     <p>ריכוזי התרופות והכנת הבקבוקון: עלוני הרופא ב<a href="https://registries.health.gov.il/Medicines" target="_blank" rel="noopener">מאגר התרופות של משרד הבריאות</a> (Penibrin 1 גרם, Gentamicin B. Braun 3 מ"ג/מ"ל).</p>
@@ -144,13 +142,13 @@
 </section>
 <section id="baby" class="panel">
   <h2>פרטי תינוק לכל החישובים</h2>
-  <p class="keepnote">מזינים פעם אחת. הפרטים מתמלאים אוטומטית בכל הלשוניות, ואפשר לשנות אותם שם.</p>
+  <p class="keepnote">מזינים כאן את הנתונים פעם אחת ואז ניתן לעבור לכל מחשבון רצוי והמספרים יופיעו שם.<br>אם תרצו לשנות פרטים- לחצו על "ניקוי" בסוף הדף או רעננו.</p>
   <label>שבוע לידה (שבוע ויום) <input id="baby-ga" class="ga" type="text" inputmode="decimal" placeholder="36+3 או 36.3" autocomplete="off"></label>
   <label>תאריך ושעת לידה <input id="baby-birth" type="datetime-local"></label>
-  <label>משקל לידה (גרם) <input id="baby-w" type="number" inputmode="numeric" min="0"></label>
+  <label>משקל לידה (בק"ג, למשל 3.3) <input id="baby-w" type="number" inputmode="decimal" step="0.001" min="0"></label>
   <label>מין <select id="baby-sex"><option value="">בחרו…</option><option value="m">זכר</option><option value="f">נקבה</option></select></label>
   <p class="dtout" id="baby-out"></p>
-  <button type="button" class="nowbtn" id="baby-clear">ניקוי כל הפרטים</button>
+  <button type="button" class="nowbtn" id="baby-clear">ניקוי</button>
 </section>
 </main>
 <div id="calc" class="calcmodal" hidden><div class="calcbox" dir="ltr">

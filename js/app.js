@@ -78,8 +78,9 @@
 
   // ---------- SGA / LGA ----------
   function renderSga() {
-    const out = $("sg-out"), sex = $("sg-sex").value, ga = parseGA($("sg-ga").value), g = parseFloat($("sg-g").value);
+    const out = $("sg-out"), sex = $("sg-sex").value, ga = parseGA($("sg-ga").value), kgIn = parseFloat($("sg-g").value), g = kgIn * 1000;
     if (!sex || !ga || isNaN(g)) { out.textContent = ""; return; }
+    if (kgIn > 20) { out.innerHTML = err("המשקל מוזן בקילוגרמים (למשל 3.3), לא בגרמים"); return; }
     if (ga.error) { out.innerHTML = err(ga.error); return; }
     const r = NT.fentonSize(sex, ga.w, ga.d, g);
     if (r.error) { out.innerHTML = err(r.error); return; }
@@ -88,7 +89,7 @@
     const zp = (z) => clamp01((z + 3) / 6);
     const sgGauge = gaugeHtml([[zp(-1.2816), "#DC2626"], [zp(1.2816), "#16A34A"], [1, "#D97706"]], zp(r.z), [[zp(-1.2816), "10"], [zp(1.2816), "90"]]);
     let html = '<div class="card ' + T[0] + '"><b>' + T[1] + '</b>' + sgGauge + 'אחוזון: <span class="big">' + pct + '</span><br>Z-score: <span class="big">' + r.z.toFixed(2) + "</span></div>";
-    html += '<div class="card">למין ולשבוע הזה:<br>אחוזון 10: ' + Math.round(r.p10) + " גרם<br>חציון: " + Math.round(r.median) + " גרם<br>אחוזון 90: " + Math.round(r.p90) + " גרם</div>";
+    html += '<div class="card">למין ולשבוע הזה:<br>אחוזון 10: ' + (r.p10 / 1000).toFixed(2) + ' ק"ג<br>חציון: ' + (r.median / 1000).toFixed(2) + ' ק"ג<br>אחוזון 90: ' + (r.p90 / 1000).toFixed(2) + ' ק"ג</div>';
     if (r.beyond3) html += '<p class="warn">Z-score מעל ‎±3: הערך מקורב. בכלי המקורי נעשה תיקון נוסף בקצוות.</p>';
     out.innerHTML = html;
   }
@@ -223,33 +224,35 @@
   const ml = (x) => x.toFixed(2);
   let showSteps = false;
   function stepsHtml(drug, r) {
-    const kg = mg(r.kg);
-    let h = '<ol class="steps"><li>מינון לתינוק: ' + mg(r.perKg) + " × " + kg + " = <b>" + mg(r.dose) + ' מ"ג</b></li>';
+    const n = (x) => "<bdi>" + x + "</bdi>"; // כל מספר נשאר שלם גם בכיוון מימין לשמאל
+    const ans = (x, u) => "<b>" + n(x) + " " + u + "</b>";
+    const MG = 'מ"ג', ML = 'מ"ל';
+    let h = '<ol class="steps"><li>מינון לתינוק: ' + n(mg(r.perKg)) + " × " + n(mg(r.kg)) + " = " + ans(mg(r.dose), MG) + "</li>";
     if (drug === "gen" && r.mode === "pure") {
-      h += '<li>מוסיפים 3 מ"ג למאריך (1 מ"ל): ' + mg(r.dose) + " + 3 = <b>" + mg(r.withExt) + ' מ"ג</b></li>';
-      h += "<li>שואבים תרופה טהורה (PURE): " + mg(r.withExt) + ' ÷ 3 = <b>' + ml(r.draw) + ' מ"ל</b></li>';
-      h += "<li>נותנים לתינוק: " + mg(r.dose) + ' ÷ 3 = <b>' + ml(r.give) + ' מ"ל</b></li>';
+      h += '<li>מוסיפים 3 מ"ג למאריך (1 מ"ל): ' + n(mg(r.dose)) + " + " + n(3) + " = " + ans(mg(r.withExt), MG) + "</li>";
+      h += "<li>שואבים תרופה טהורה (PURE): " + n(mg(r.withExt)) + " ÷ " + n(3) + " = " + ans(ml(r.draw), ML) + "</li>";
+      h += "<li>נותנים לתינוק: " + n(mg(r.dose)) + " ÷ " + n(3) + " = " + ans(ml(r.give), ML) + "</li>";
     } else {
-      h += "<li>מינון עם מאריך: " + mg(r.dose) + " × 5 ÷ 4 = <b>" + mg(r.withExt) + ' מ"ג</b></li>';
+      h += "<li>מינון עם מאריך: " + n(mg(r.dose)) + " × " + n(5) + " ÷ " + n(4) + " = " + ans(mg(r.withExt), MG) + "</li>";
       if (drug === "amp") {
         h += '<li>מדללים את הבקבוקון (1000 מ"ג) ב-5 מ"ל מים להזרקה: 200 מ"ג למ"ל</li>';
-        h += "<li>שואבים תרופה: " + mg(r.withExt) + ' ÷ 200 = <b>' + ml(r.draw) + ' מ"ל</b></li>';
+        h += "<li>שואבים תרופה: " + n(mg(r.withExt)) + " ÷ " + n(200) + " = " + ans(ml(r.draw), ML) + "</li>";
       } else if (drug === "cef") {
         h += '<li>מדללים את הבקבוקון (1000 מ"ג) ב-4 מ"ל מים להזרקה: נפח סופי 4.5 מ"ל (1000 מ"ג ב-4.5 מ"ל)</li>';
-        h += "<li>שואבים תרופה: " + mg(r.withExt) + ' × 4.5 ÷ 1000 = <b>' + ml(r.draw) + ' מ"ל</b></li>';
+        h += "<li>שואבים תרופה: " + n(mg(r.withExt)) + " × " + n(4.5) + " ÷ " + n(1000) + " = " + ans(ml(r.draw), ML) + "</li>";
       } else {
-        h += '<li>שואבים תרופה (3 מ"ג למ"ל): ' + mg(r.withExt) + ' ÷ 3 = <b>' + ml(r.draw) + ' מ"ל</b></li>';
+        h += '<li>שואבים תרופה (3 מ"ג למ"ל): ' + n(mg(r.withExt)) + " ÷ " + n(3) + " = " + ans(ml(r.draw), ML) + "</li>";
       }
-      h += '<li>משלימים בסליין: 5 − ' + ml(r.draw) + ' = <b>' + ml(r.saline) + ' מ"ל</b> (סה"כ 5 מ"ל)</li>';
-      h += '<li>נותנים לתינוק: <b>4 מ"ל</b> (' + mg(r.dose) + ' מ"ג)</li>';
+      h += "<li>משלימים בסליין: " + n(5) + " − " + n(ml(r.draw)) + " = " + ans(ml(r.saline), ML) + ' (סה"כ 5 מ"ל)</li>';
+      h += '<li>נותנים לתינוק: <b>4 מ"ל</b> (' + n(mg(r.dose)) + ' מ"ג)</li>';
     }
     return h + "</ol>";
   }
   function renderDrugs() {
-    const out = $("dr-out"), drug = $("dr-drug").value, g = parseFloat($("dr-w").value);
+    const out = $("dr-out"), drug = $("dr-drug").value, kgIn = parseFloat($("dr-w").value), g = Math.round(kgIn * 1000);
     $("dr-ga-row").hidden = drug !== "gen";
-    $("dr-fields").hidden = !drug;
     if (!drug || isNaN(g)) { out.textContent = ""; return; }
+    if (kgIn > 20) { out.innerHTML = err("המשקל מוזן בקילוגרמים (למשל 3.3), לא בגרמים"); return; }
     let r;
     if (drug === "amp") r = NT.ampicillin(g);
     else if (drug === "cef") r = NT.cefotaxime(g);
