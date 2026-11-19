@@ -66,13 +66,15 @@
     if (pma < 27 * 7) return { error: "הכלי מיועד לגיל מצטבר 27 שבועות ומעלה" };
     const warnings = [];
     if (ageHours < 48) warnings.push("הכלי לא מיועד לתינוקות מתחת ל-48 שעות");
-    const note = pma >= 35 * 7 ? "הסף בפלאטו: מגיל מצטבר 35 שבועות הערכים של Stanford לא עולים עוד, כי הכלי מסתיים ב-35 שבועות. להמשך יש להסתמך על AAP 2022 (למטה)." : "";
+    // הסף מפסיק לעלות כשגיל ההריון המצטבר מגיע ל-35 שבועות (סוף טווח הכלי של Stanford)
+    const from = Math.max(0, (35 * 7 - days) * 24);
     return {
       pma: { weeks: Math.floor(pma / 7), days: pma % 7 },
       photo: r1(interp(rf ? ANCHORS.photoRF : ANCHORS.photoNoRF, pma)),
       exchange: r1(interp(rf ? ANCHORS.exchRF : ANCHORS.exchNoRF, pma)),
       warnings: warnings,
-      note: note,
+      photoFrom: from,
+      exchFrom: from,
     };
   };
 })(typeof window !== "undefined" ? window : globalThis);

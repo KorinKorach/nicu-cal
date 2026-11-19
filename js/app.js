@@ -110,6 +110,7 @@
   }
   function plateauNote(r, h) {
     if (r.photoFrom === undefined || !(h >= 0)) return "";
+    if (r.pma) return h >= r.photoFrom ? '<p class="plateau"><b class="ptitle">הסף בפלאטו</b>בפגים, על פי Stanford, הסף מגיע לפלאטו כשגיל ההריון המצטבר הוא 35 שבועות. במקרה זה, הסף קבוע החל מגיל ' + r.photoFrom + " שעות ואינו עולה עוד (להמשך, ניתן להסתמך על הכלי AAP 2022)</p>" : "";
     const n = [];
     if (h >= r.photoFrom) n.push("סף הפוטותרפיה בפלאטו: קבוע מגיל " + r.photoFrom + " שעות ואינו עולה עוד");
     if (h >= r.exchFrom) n.push("סף חילוף הדם בפלאטו: קבוע מגיל " + r.exchFrom + " שעות ואינו עולה עוד");
@@ -119,12 +120,14 @@
     let cls = "", status = "";
     if (v !== null && !isNaN(v)) {
       if (v >= r.exchange) { cls = "bad"; status = "בילירובין בסף חילוף דם או מעליו"; }
+      else if (!r.pma && v >= r.exchange - 2) { cls = "bad"; status = "בילירובין בסף הסלמת טיפול או מעליו"; }
       else if (v >= r.photo) { cls = "mid"; status = "בילירובין בסף פוטותרפיה או מעליו"; }
       else { cls = "ok"; status = "מתחת לסף פוטותרפיה"; }
     }
     return '<div class="card ' + cls + '"><b>' + title + "</b>" + (status ? "<b>" + status + "</b>" : "") +
       biliGauge(r, v) +
       'פוטותרפיה: <span class="big">' + num1(r.photo) + "</span> mg/dL<br>" +
+      (!r.pma ? 'הסלמת טיפול: <span class="big">' + num1(r.exchange - 2) + "</span> mg/dL<br>" : "") +
       'חילוף דם: <span class="big">' + num1(r.exchange) + "</span> mg/dL" + plateauNote(r, h) + (r.note ? '<p class="plateau">' + r.note + "</p>" : "") + "</div>";
   }
   function renderBili() {
@@ -142,7 +145,6 @@
       if (r.error) { out.innerHTML = err(r.error); return; }
       html = biliCard("Stanford Premie BiliRecs (פגים), גיל מצטבר " + wd(r.pma), r, v, h);
       r.warnings.forEach((x) => (html += '<p class="warn">' + x + "</p>"));
-      if (r.pma.weeks >= 35) html += biliCard("להשוואה: AAP 2022 כאילו נולד בשבוע 35", NT.biliAAP(35, h, rf), v, h);
     }
     out.innerHTML = html;
   }
@@ -222,18 +224,21 @@
   // ---------- תרופות IV ----------
   const mg = (x) => (Math.round(x * 1000) / 1000).toString();
   const ml = (x) => x.toFixed(2);
-  let showSteps = false;
+  let showSteps = false, manualWE = "";
   function stepsHtml(drug, r) {
     const n = (x) => "<bdi>" + x + "</bdi>"; // כל מספר נשאר שלם גם בכיוון מימין לשמאל
     const ans = (x, u) => "<b>" + n(x) + " " + u + "</b>";
     const MG = 'מ"ג', ML = 'מ"ל';
-    let h = '<ol class="steps"><li>מינון לתינוק: ' + n(mg(r.perKg)) + " × " + n(mg(r.kg)) + " = " + ans(mg(r.dose), MG) + "</li>";
+    let h = '<ol class="steps">';
+    if (r.manual) h += '<li>מינון עם מאריך לפי הוראה רפואית: <b>' + n(mg(r.withExt)) + " " + MG + "</b></li>";
+    else h += '<li>מינון לתינוק: ' + n(mg(r.perKg)) + " × " + n(mg(r.kg)) + " = " + ans(mg(r.dose), MG) + "</li>";
     if (drug === "gen" && r.mode === "pure") {
-      h += '<li>מוסיפים 3 מ"ג למאריך (1 מ"ל): ' + n(mg(r.dose)) + " + " + n(3) + " = " + ans(mg(r.withExt), MG) + "</li>";
+      if (!r.manual) h += '<li>מוסיפים 3 מ"ג למאריך (1 מ"ל): ' + n(mg(r.dose)) + " + " + n(3) + " = " + ans(mg(r.withExt), MG) + "</li>";
       h += "<li>שואבים תרופה טהורה (PURE): " + n(mg(r.withExt)) + " ÷ " + n(3) + " = " + ans(ml(r.draw), ML) + "</li>";
-      h += "<li>נותנים לתינוק: " + n(mg(r.dose)) + " ÷ " + n(3) + " = " + ans(ml(r.give), ML) + "</li>";
+      if (r.manual) h += "<li>נותנים לתינוק: (" + n(mg(r.withExt)) + " − " + n(3) + ") ÷ " + n(3) + " = " + ans(ml(r.give), ML) + "</li>";
+      else h += "<li>נותנים לתינוק: " + n(mg(r.dose)) + " ÷ " + n(3) + " = " + ans(ml(r.give), ML) + "</li>";
     } else {
-      h += "<li>מינון עם מאריך: " + n(mg(r.dose)) + " × " + n(5) + " ÷ " + n(4) + " = " + ans(mg(r.withExt), MG) + "</li>";
+      if (!r.manual) h += "<li>מינון עם מאריך: " + n(mg(r.dose)) + " × " + n(5) + " ÷ " + n(4) + " = " + ans(mg(r.withExt), MG) + "</li>";
       if (drug === "amp") {
         h += '<li>מדללים את הבקבוקון (1000 מ"ג) ב-5 מ"ל מים להזרקה: 200 מ"ג למ"ל</li>';
         h += "<li>שואבים תרופה: " + n(mg(r.withExt)) + " ÷ " + n(200) + " = " + ans(ml(r.draw), ML) + "</li>";
@@ -263,12 +268,17 @@
       r = NT.gentamicin(g, ga.w);
     }
     if (r.error) { out.innerHTML = err(r.error); return; }
+    const base = r, mv = parseFloat(manualWE);
+    let manErr = "";
+    if (mv > 0) { const m = NT.applyManual(drug, r, mv); if (m.error) manErr = m.error; else r = m; }
     const pure = drug === "gen" && r.mode === "pure";
     const row = (k, v) => '<div class="rrow"><span>' + k + "</span><b>" + v + "</b></div>";
     let h = '<div class="card"><b class="ctitle">' + ({ amp: "אמפיצילין", cef: "צפוטקסים (קלפורן)", gen: "גנטמיצין" }[drug]) + " – משקל " + mg(r.kg) + ' ק"ג</b>';
-    h += row("מינון ללא מאריך", mg(r.dose) + ' מ"ג');
-    h += row("מינון עם מאריך", mg(r.withExt) + ' מ"ג');
-    h += row("שואבים מהתרופה", ml(r.draw) + ' מ"ל');
+    h += row("מינון ללא מאריך", mg(base.dose) + ' מ"ג');
+    h += row("מינון עם מאריך", mg(base.withExt) + ' מ"ג');
+    h += '<div class="rrow manrow"><label for="dr-manual">מינון עם מאריך לפי הוראה רפואית</label><span class="manin"><input id="dr-manual" type="text" inputmode="decimal" autocomplete="off" value="' + manualWE + '"> מ"ג</span></div>';
+    if (manErr) h += '<p class="err">' + manErr + "</p>";
+    h += row(r.manual ? "שואבים מהתרופה (לפי ההוראה)" : "שואבים מהתרופה", ml(r.draw) + ' מ"ל');
     h += row("משלימים בסליין", pure ? "ללא סליין (PURE)" : ml(r.saline) + ' מ"ל');
     if (pure) h += row("נותנים לתינוק", ml(r.give) + ' מ"ל');
     h += '<div class="calcrow"><button type="button" class="calcbtn" id="dr-toggle" aria-expanded="' + showSteps + '"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M8 15h2M12 15h2M8 18h2M12 18h4"/></svg><span>' + (showSteps ? "הסתר את החישוב" : "הצג את החישוב") + '</span></button><button type="button" class="calcbtn" id="dr-calc-open" aria-label="מחשבון"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"/></svg><span>מחשבון</span></button></div>';
@@ -276,13 +286,18 @@
     if (drug === "gen") h += '<p class="warn">המינון מחושב לפי שבוע לידה, לתינוקות בגיל 0 עד 7 ימים בלבד.</p>';
     if (drug === "amp" || drug === "cef") h += '<p class="warn">מחושב לפי המינון הסטנדרטי: 50 מ"ג/ק"ג למנה.</p>';
     h += '<p class="warn">המחשבון נועד לוודא חישובים שנעשו באופן עצמאי ולא מחליף אותם. יש להשוות תמיד מול ההוראה הרפואית.</p>';
+    const hadFocus = document.activeElement && document.activeElement.id === "dr-manual";
     out.innerHTML = h;
+    if (hadFocus) { const i = $("dr-manual"); i.focus(); try { i.setSelectionRange(i.value.length, i.value.length); } catch (e) {} }
   }
+  $("dr-out").addEventListener("input", function (e) {
+    if (e.target.id === "dr-manual") { manualWE = e.target.value.replace(",", "."); renderDrugs(); }
+  });
   $("dr-out").addEventListener("click", function (e) {
     if (e.target.closest("#dr-toggle")) { showSteps = !showSteps; renderDrugs(); }
     if (e.target.closest("#dr-calc-open")) { $("calc").hidden = false; }
   });
-  ["dr-drug", "dr-w", "dr-ga"].forEach((i) => $(i).addEventListener("input", renderDrugs));
+  ["dr-drug", "dr-w", "dr-ga"].forEach((i) => $(i).addEventListener("input", function () { manualWE = ""; renderDrugs(); }));
 
   // ---------- מחשבון רגיל ----------
   (function () {

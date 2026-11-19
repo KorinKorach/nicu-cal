@@ -60,4 +60,18 @@
     }
     return res;
   };
+  // מינון עם מאריך שהוזן ידנית לפי הוראה רפואית: מחשבים מחדש שאיבה והשלמה
+  NT.applyManual = function (drug, r, we) {
+    const o = Object.assign({}, r, { manual: true, withExt: we });
+    if (drug === "gen" && we >= 15) {
+      o.mode = "pure"; o.dose = we - 3; o.draw = cut2(we / 3); o.give = cut2(o.dose / 3); o.saline = 0;
+    } else {
+      o.dose = (we * 4) / 5; o.give = 4;
+      o.draw = drug === "amp" ? cut2(we / 200) : drug === "cef" ? cut2((we * 4.5) / 1000) : cut2(we / 3);
+      if (drug === "gen") o.mode = "dilute";
+      if (o.draw > 5) return { error: 'המינון שהוזן גדול מדי: צריך לשאוב יותר מ-5 מ"ל' };
+      o.saline = cut2(5 - o.draw);
+    }
+    return o;
+  };
 })(typeof window !== "undefined" ? window : globalThis);
