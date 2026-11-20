@@ -133,7 +133,8 @@
   function renderBili() {
     const out = $("bili-out"), ga = parseGA($("bili-ga").value), h = parseFloat($("bili-h").value);
     const rf = $("bili-rf").checked, vRaw = $("bili-v").value, v = vRaw === "" ? null : parseFloat(vRaw);
-    if (!ga || isNaN(h)) { out.textContent = ""; return; }
+    const preWarn = ga && !ga.error && ga.w < 35 ? '<p class="warn"><b>שימו לב: זו לשונית לשבוע 35 ומעלה.</b> לפגים (שבוע 24 עד 34) יש לעבור למחשבון "צהבת בפגים".<br><button type="button" class="nowbtn" id="bili-gopre" style="margin:8px 0 0">מעבר למחשבון צהבת בפגים</button></p>' : "";
+    if (!ga || isNaN(h)) { out.innerHTML = preWarn; return; }
     if (ga.error) { out.innerHTML = err(ga.error); return; }
     let html = "";
     if (ga.w >= 35) {
@@ -143,11 +144,18 @@
     } else {
       const r = NT.biliPreterm(ga.w, ga.d, h, rf);
       if (r.error) { out.innerHTML = err(r.error); return; }
-      html = biliCard("Stanford Premie BiliRecs (פגים), גיל מצטבר " + wd(r.pma), r, v, h);
+      html = preWarn + biliCard("Stanford Premie BiliRecs (פגים), גיל מצטבר " + wd(r.pma), r, v, h);
       r.warnings.forEach((x) => (html += '<p class="warn">' + x + "</p>"));
     }
     out.innerHTML = html;
   }
+  $("bili-out").addEventListener("click", function (e) {
+    if (e.target.closest("#bili-gopre")) {
+      show("pbili");
+      ["ga", "h", "v"].forEach(function (k) { $("pbili-" + k).value = $("bili-" + k).value; });
+      $("pbili-ga").dispatchEvent(new Event("input", { bubbles: true }));
+    }
+  });
   ["bili-ga", "bili-h", "bili-rf", "bili-v"].forEach((i) => $(i).addEventListener("input", renderBili));
 
   // ---------- צהבת בפגים (NICE) ----------
