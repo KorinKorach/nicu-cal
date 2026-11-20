@@ -120,15 +120,15 @@
     let cls = "", status = "";
     if (v !== null && !isNaN(v)) {
       if (v >= r.exchange) { cls = "bad"; status = "בילירובין בסף חילוף דם או מעליו"; }
-      else if (!r.pma && v >= r.exchange - 2) { cls = "bad"; status = "בילירובין בסף הסלמת טיפול או מעליו"; }
+      else if (!r.pma && !r.nice && v >= r.exchange - 2) { cls = "bad"; status = "בילירובין בסף הסלמת טיפול או מעליו"; }
       else if (v >= r.photo) { cls = "mid"; status = "בילירובין בסף פוטותרפיה או מעליו"; }
       else { cls = "ok"; status = "מתחת לסף פוטותרפיה"; }
     }
     return '<div class="card ' + cls + '"><b>' + title + "</b>" + (status ? "<b>" + status + "</b>" : "") +
       biliGauge(r, v) +
       'פוטותרפיה: <span class="big">' + num1(r.photo) + "</span> mg/dL<br>" +
-      (!r.pma ? 'הסלמת טיפול: <span class="big">' + num1(r.exchange - 2) + "</span> mg/dL<br>" : "") +
-      'חילוף דם: <span class="big">' + num1(r.exchange) + "</span> mg/dL" + plateauNote(r, h) + (r.note ? '<p class="plateau">' + r.note + "</p>" : "") + "</div>";
+      (!r.pma && !r.nice ? 'הסלמת טיפול: <span class="big">' + num1(r.exchange - 2) + "</span> mg/dL<br>" : "") +
+      'חילוף דם: <span class="big">' + num1(r.exchange) + "</span> mg/dL" + plateauNote(r, h) + (r.extra || '') + (r.note ? '<p class="plateau">' + r.note + "</p>" : "") + "</div>";
   }
   function renderBili() {
     const out = $("bili-out"), ga = parseGA($("bili-ga").value), h = parseFloat($("bili-h").value);
@@ -149,6 +149,22 @@
     out.innerHTML = html;
   }
   ["bili-ga", "bili-h", "bili-rf", "bili-v"].forEach((i) => $(i).addEventListener("input", renderBili));
+
+  // ---------- צהבת בפגים (NICE) ----------
+  function renderPbili() {
+    const out = $("pbili-out"), ga = parseGA($("pbili-ga").value), h = parseFloat($("pbili-h").value);
+    const vRaw = $("pbili-v").value, v = vRaw === "" ? null : parseFloat(vRaw);
+    if (!ga || isNaN(h)) { out.textContent = ""; return; }
+    if (ga.error) { out.innerHTML = err(ga.error); return; }
+    const r = NT.biliNICE(ga.w, h);
+    if (r.error) { out.innerHTML = err(r.error); return; }
+    r.nice = true;
+    r.extra = '<p class="plateau">' + "בעקומה: אור " + Math.round(r.photoUm) + " וחילוף דם " + Math.round(r.exchUm) + " מיקרומול/ל', ומחלקים ב-17</p>";
+    let html = biliCard("עקומות NICE, שבוע " + r.week, r, v, h);
+    if (r.beyond) html += '<p class="warn">העקומות מגיעות עד גיל 14 ימים.</p>';
+    out.innerHTML = html;
+  }
+  ["pbili-ga", "pbili-h", "pbili-v"].forEach((i) => $(i).addEventListener("input", renderPbili));
 
   // ---------- זיהום ----------
   const SP_INCIDENCE = 0.5; // קבוע: ארה"ב, CDC
@@ -197,8 +213,8 @@
 
   // ---------- פרטי תינוק לכל החישובים ----------
   const BABY_MAP = {
-    "baby-ga": ["age-ga", "bili-ga", "sg-ga", "sp-ga", "dr-ga"],
-    "baby-birth": ["age-birth", "bili-birth", "pku-birth"],
+    "baby-ga": ["age-ga", "bili-ga", "pbili-ga", "sg-ga", "sp-ga", "dr-ga"],
+    "baby-birth": ["age-birth", "bili-birth", "pbili-birth", "pku-birth"],
     "baby-w": ["sg-g", "dr-w"],
     "baby-sex": ["sg-sex"],
   };
@@ -217,7 +233,7 @@
     Object.keys(BABY_MAP).forEach(function (id) {
       $(id).value = ""; babyPush(id);
     });
-    ["age-h", "bili-h", "age-until", "bili-until", "bili-v"].forEach(function (id) { $(id).value = ""; $(id).dispatchEvent(new Event("input", { bubbles: true })); });
+    ["age-h", "bili-h", "pbili-h", "age-until", "bili-until", "pbili-until", "bili-v", "pbili-v"].forEach(function (id) { $(id).value = ""; $(id).dispatchEvent(new Event("input", { bubbles: true })); });
     $("baby-out").textContent = "";
   });
 
@@ -343,7 +359,7 @@
     $(hoursId).value = hrs;
     $(hoursId).dispatchEvent(new Event("input", { bubbles: true }));
   }
-  [["age", "age-h"], ["bili", "bili-h"]].forEach(function (x) {
+  [["age", "age-h"], ["bili", "bili-h"], ["pbili", "pbili-h"]].forEach(function (x) {
     ["-birth", "-until"].forEach((s) => $(x[0] + s).addEventListener("input", () => dtCalc(x[0], x[1])));
   });
   document.querySelectorAll(".nowbtn").forEach(function (btn) {
