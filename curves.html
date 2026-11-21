@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>עקומות NICE לפגים</title>
+<link rel="icon" href="icons/favicon-64.png">
+<link rel="stylesheet" href="style.css">
+<style>
+  .wk{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+  .wk button{min-width:48px;padding:10px 0;border:1px solid var(--line);border-radius:10px;background:#fff;color:#15386B;font-family:inherit;font-size:16px;cursor:pointer}
+  .wk button.on{background:#15386B;color:#fff;border-color:#15386B}
+  .cv img{width:100%;height:auto;border:1px solid var(--line);border-radius:10px;background:#fff}
+  .cv p{font-size:13px;color:#6B7A86}
+  main.cvpage{max-width:900px;margin:0 auto;padding:12px 16px 32px}
+  #lb{position:fixed;inset:0;background:rgba(10,20,40,.9);overflow:auto;z-index:50;-webkit-overflow-scrolling:touch}
+  #lb[hidden]{display:none !important}
+  #lb img{display:block;width:max(1000px,100%);max-width:none;height:auto;background:#fff;margin:0}
+  #lbx{position:fixed;top:12px;left:12px;z-index:60;padding:10px 18px;border:0;border-radius:24px;background:#fff;color:#15386B;font-weight:600;font-size:17px;font-family:inherit;box-shadow:0 2px 8px rgba(0,0,0,.4);cursor:pointer}
+</style>
+</head>
+<body>
+<header><img class="logo" src="icons/icon-192.png" alt="" width="40" height="40"><h1>Nicu Cal</h1></header>
+<main class="cvpage">
+  <h2>עקומות NICE לפגים (NHS, בריטניה)</h2>
+  <p>בחרו שבוע לידה. הקו התחתון הוא סף הפוטותרפיה והקו העליון הוא סף חילוף הדם, במיקרומול/ל' לפי ימים מהלידה. כדי להמיר ל-mg/dL מחלקים ב-17.</p>
+  <div class="wk" id="wk"></div>
+  <div class="cv"><a id="cvlink" href="#"><img id="cvimg" alt="עקומת NICE"></a><p id="cvcap"></p></div>
+  <p><a href="index.html">חזרה לכלי</a> | <a href="https://www.nice.org.uk/guidance/cg98" target="_blank" rel="noopener">ההנחיה של NICE: Jaundice in newborn babies under 28 days (CG98)</a></p>
+</main>
+<div id="lb" hidden><button id="lbx" type="button" aria-label="סגירה">✕ סגירה</button><img id="lbimg" alt="עקומת NICE בגודל מלא"></div>
+<script>
+(function () {
+  var wk = document.getElementById("wk"), img = document.getElementById("cvimg"), link = document.getElementById("cvlink"), cap = document.getElementById("cvcap");
+  function show(w) {
+    img.src = "curves/nice-" + w + ".jpg";
+    link.href = img.src;
+    cap.textContent = "שבוע " + w + ". לחיצה על התמונה מגדילה אותה.";
+    Array.prototype.forEach.call(wk.children, function (b) { b.classList.toggle("on", +b.textContent === w); });
+    try { history.replaceState(null, "", "#" + w); } catch (e) {}
+  }
+  for (var w = 24; w <= 34; w++) {
+    var b = document.createElement("button");
+    b.type = "button"; b.textContent = w;
+    b.addEventListener("click", (function (x) { return function () { show(x); }; })(w));
+    wk.appendChild(b);
+  }
+  var lb = document.getElementById("lb"), lbimg = document.getElementById("lbimg");
+  function openLb() { lbimg.src = img.src; lb.hidden = false; lb.scrollTop = 0; document.body.style.overflow = "hidden"; }
+  function closeLb() { lb.hidden = true; document.body.style.overflow = ""; }
+  link.addEventListener("click", function (e) { e.preventDefault(); openLb(); });
+  document.getElementById("lbx").addEventListener("click", closeLb);
+  lb.addEventListener("click", function (e) { if (e.target === lb) closeLb(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeLb(); });
+  var h = parseInt(location.hash.slice(1), 10);
+  show(h >= 24 && h <= 34 ? h : 24);
+})();
+</script>
+</body>
+</html>

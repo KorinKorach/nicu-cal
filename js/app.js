@@ -167,8 +167,8 @@
     if (ga.error) { out.innerHTML = err(ga.error); return; }
     const r = NT.biliNICE(ga.w, h);
     if (r.error) { out.innerHTML = err(r.error); return; }
+    $("pbili-curves").href = "curves.html#" + r.week;
     r.nice = true;
-    r.extra = '<p class="plateau">' + "בעקומה: אור " + Math.round(r.photoUm) + " וחילוף דם " + Math.round(r.exchUm) + " מיקרומול/ל', ומחלקים ב-17</p>";
     let html = biliCard("עקומות NICE, שבוע " + r.week, r, v, h);
     if (r.beyond) html += '<p class="warn">העקומות מגיעות עד גיל 14 ימים.</p>';
     out.innerHTML = html;
