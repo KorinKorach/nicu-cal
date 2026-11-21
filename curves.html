@@ -17,16 +17,17 @@
   #lb[hidden]{display:none !important}
   #lb img{display:block;width:max(1000px,100%);max-width:none;height:auto;background:#fff;margin:0}
   #lbx{position:fixed;top:12px;right:12px;z-index:60;padding:10px 18px;border:0;border-radius:24px;background:#fff;color:#15386B;font-weight:600;font-size:17px;font-family:inherit;box-shadow:0 2px 8px rgba(0,0,0,.4);cursor:pointer}
+  a.back{text-decoration:none}
 </style>
 </head>
 <body>
 <header><img class="logo" src="icons/icon-192.png" alt="" width="40" height="40"><h1>Nicu Cal</h1></header>
 <main class="cvpage">
+  <a class="back" id="cvback" href="index.html#pbili" aria-label="חזרה לצהבת בפגים"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
   <h2>עקומות NICE לפגים (NHS, בריטניה)</h2>
   <p>בחרו שבוע לידה. הקו התחתון הוא סף הפוטותרפיה והקו העליון הוא סף חילוף הדם, במיקרומול/ל' לפי ימים מהלידה. כדי להמיר ל-mg/dL מחלקים ב-17.</p>
   <div class="wk" id="wk"></div>
   <div class="cv"><a id="cvlink" href="#"><img id="cvimg" alt="עקומת NICE"></a><p id="cvcap"></p></div>
-  <p><a href="index.html">חזרה לכלי</a> | <a href="https://www.nice.org.uk/guidance/cg98" target="_blank" rel="noopener">ההנחיה של NICE: Jaundice in newborn babies under 28 days (CG98)</a></p>
 </main>
 <div id="lb" hidden><button id="lbx" type="button" aria-label="סגירה">✕ סגירה</button><img id="lbimg" alt="עקומת NICE בגודל מלא"></div>
 <script>
@@ -45,6 +46,11 @@
     b.addEventListener("click", (function (x) { return function () { show(x); }; })(w));
     wk.appendChild(b);
   }
+  function goBack(e) {
+    var ref = document.referrer || "";
+    if (history.length > 1 && /\/(index\.html)?(#.*)?$/.test(ref.split("?")[0])) { e.preventDefault(); history.back(); }
+  }
+  document.getElementById("cvback").addEventListener("click", goBack);
   var lb = document.getElementById("lb"), lbimg = document.getElementById("lbimg");
   function openLb() { lbimg.src = img.src; lb.hidden = false; lb.scrollTop = 0; document.body.style.overflow = "hidden"; }
   function closeLb() { lb.hidden = true; document.body.style.overflow = ""; }

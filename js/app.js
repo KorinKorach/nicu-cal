@@ -18,6 +18,9 @@
     document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("on", p.id === tab));
     window.scrollTo(0, 0);
   }
+  // פתיחה ישירה ללשונית לפי כתובת (למשל index.html#pbili)
+  const hashTab = location.hash.slice(1);
+  if (hashTab && document.getElementById(hashTab) && document.getElementById(hashTab).classList.contains("panel")) show(hashTab);
   // חץ חזרה לדף הבית בראש כל מחשבון
   document.querySelectorAll(".panel:not(#home)").forEach(function (p) {
     const b = document.createElement("button");
@@ -378,4 +381,22 @@
       t.dispatchEvent(new Event("input", { bubbles: true }));
     });
   });
+  // שמירת הנתונים של צהבת בפגים בזמן מעבר לדף העקומות וחזרה
+  (function () {
+    const ids = ["pbili-ga", "pbili-h", "pbili-birth", "pbili-until", "pbili-v"];
+    $("pbili-curves").addEventListener("click", function () {
+      try { sessionStorage.setItem("nc_pbili", JSON.stringify(ids.map((i) => $(i).value))); } catch (e) {}
+    });
+    try {
+      const saved = sessionStorage.getItem("nc_pbili");
+      if (saved && location.hash === "#pbili") {
+        const vals = JSON.parse(saved);
+        setTimeout(function () {
+          ids.forEach(function (i, k) { $(i).value = vals[k] || ""; });
+          ["pbili-birth", "pbili-ga", "pbili-h", "pbili-v"].forEach((i) => $(i).dispatchEvent(new Event("input", { bubbles: true })));
+        }, 0);
+      }
+      sessionStorage.removeItem("nc_pbili");
+    } catch (e) {}
+  })();
 })();
