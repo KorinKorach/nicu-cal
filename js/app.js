@@ -21,17 +21,46 @@
   // פתיחה ישירה ללשונית לפי כתובת (למשל index.html#pbili)
   const hashTab = location.hash.slice(1);
   if (hashTab && document.getElementById(hashTab) && document.getElementById(hashTab).classList.contains("panel")) show(hashTab);
-  // חץ חזרה לדף הבית בראש כל מחשבון
+  // בחירת מחשבון מתוך פרטי התינוק: משכפל את אריחי הבית
+  let babyFlow = false;
+  document.querySelectorAll("#home .tile:not(.alt)").forEach(function (t) {
+    const c = t.cloneNode(true);
+    c.className = "chip";
+    $("pick-grid").appendChild(c);
+  });
+  // חץ חזרה בראש כל מחשבון: לדף הבית, או לפרטי התינוק אם הגענו משם
   document.querySelectorAll(".panel:not(#home)").forEach(function (p) {
+    const row = document.createElement("div");
+    row.className = "toprow";
     const b = document.createElement("button");
     b.type = "button";
     b.className = "back";
-    b.dataset.tab = "home";
-    b.setAttribute("aria-label", "חזרה לדף הבית");
+    b.setAttribute("aria-label", "חזרה");
     b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
-    p.insertBefore(b, p.firstChild);
+    b.addEventListener("click", function () {
+      if (p.id === "pick") show("baby");
+      else if (p.id === "baby") { babyFlow = false; syncFlow(); show("home"); }
+      else show(babyFlow ? "baby" : "home");
+      syncFlow();
+    });
+    row.appendChild(b);
+    if (p.id !== "baby" && p.id !== "pick") {
+      const c = document.createElement("button");
+      c.type = "button";
+      c.className = "nowbtn clrhome";
+      c.textContent = "נקה פרטים ועבור לדף הבית";
+      c.addEventListener("click", function () { clearBaby(); babyFlow = false; syncFlow(); show("home"); });
+      row.appendChild(c);
+    }
+    p.insertBefore(row, p.firstChild);
   });
-  document.querySelectorAll("[data-tab]").forEach((el) => el.addEventListener("click", () => show(el.dataset.tab)));
+  function syncFlow() { document.body.classList.toggle("babyflow", babyFlow); }
+  document.querySelectorAll("[data-tab]").forEach((el) => el.addEventListener("click", function () {
+    if (el.closest("#pick")) babyFlow = true;
+    else if (el.closest("#home")) babyFlow = false;
+    syncFlow();
+    show(el.dataset.tab);
+  }));
 
   // ---------- גיל מתוקן ----------
   function renderAge() {
@@ -233,21 +262,15 @@
   function babyPush(src) {
     const v = $(src).value;
     BABY_MAP[src].forEach(function (id) { $(id).value = v; $(id).dispatchEvent(new Event("input", { bubbles: true })); });
-    if (src === "baby-birth") {
-      const out = $("baby-out");
-      if (!v) { out.textContent = ""; return; }
-      const hrs = Math.floor((Date.now() - new Date(v).getTime()) / 3600000);
-      out.textContent = hrs < 0 ? "תאריך הלידה הוא בעתיד" : "גיל כרגע: " + hrs + " שעות (" + Math.floor(hrs / 24) + " ימים ו-" + (hrs % 24) + " שעות)";
-    }
   }
   Object.keys(BABY_MAP).forEach((id) => $(id).addEventListener("input", () => babyPush(id)));
-  $("baby-clear").addEventListener("click", function () {
+  function clearBaby() {
     Object.keys(BABY_MAP).forEach(function (id) {
       $(id).value = ""; babyPush(id);
     });
     ["age-h", "bili-h", "pbili-h", "age-until", "bili-until", "pbili-until", "bili-v", "pbili-v"].forEach(function (id) { $(id).value = ""; $(id).dispatchEvent(new Event("input", { bubbles: true })); });
-    $("baby-out").textContent = "";
-  });
+  }
+  $("baby-clear").addEventListener("click", clearBaby);
 
   // ---------- תרופות IV ----------
   const mg = (x) => (Math.round(x * 1000) / 1000).toString();
