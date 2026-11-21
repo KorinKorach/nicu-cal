@@ -133,3 +133,12 @@ body.babyflow .clrhome{display:block}
 .chip{display:flex;align-items:center;gap:12px;padding:12px 14px;background:#fff;border:1.5px solid #15386B;border-radius:999px;color:#15386B;font-family:inherit;font-size:16px;font-weight:500;text-align:start;cursor:pointer}
 .chip svg{width:26px;height:26px;flex:0 0 auto;fill:none;stroke:#15386B;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .chip:active{background:#EEF4FB}
+/* הכנת ציוד לפעולות */
+.eqitems{margin-top:12px}
+.eqi{padding:8px 0;font-size:17px;gap:12px;cursor:pointer}
+.eqi input{width:22px;height:22px;flex:0 0 auto}
+.eqdone{color:#166534;font-weight:600;margin:8px 0}
+.eqcap{margin:14px 0 6px;font-size:14px;color:#51606B}
+.eqimg{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--line)}
+.eqnote{text-align:center;margin:12px 0;padding:10px 12px;background:#EEF4FB;border:1px dashed #15386B;border-radius:10px;color:#15386B;font-size:15px;line-height:1.5}
+.eqnote[hidden]{display:none}

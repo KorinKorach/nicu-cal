@@ -23,7 +23,7 @@
   if (hashTab && document.getElementById(hashTab) && document.getElementById(hashTab).classList.contains("panel")) show(hashTab);
   // בחירת מחשבון מתוך פרטי התינוק: משכפל את אריחי הבית
   let babyFlow = false;
-  document.querySelectorAll("#home .tile:not(.alt)").forEach(function (t) {
+  document.querySelectorAll("#home .tile:not(.alt):not(.nopick)").forEach(function (t) {
     const c = t.cloneNode(true);
     c.className = "chip";
     $("pick-grid").appendChild(c);
