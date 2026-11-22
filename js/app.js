@@ -127,6 +127,24 @@
   }
   ["sg-sex", "sg-ga", "sg-g"].forEach((i) => $(i).addEventListener("input", renderSga));
 
+  // ---------- אחוזון היקף ראש ----------
+  function renderHc() {
+    const out = $("hc-out"), sex = $("hc-sex").value, ga = parseGA($("hc-ga").value), c = parseFloat($("hc-c").value);
+    if (!sex || !ga || isNaN(c)) { out.textContent = ""; return; }
+    if (c > 60) { out.innerHTML = err("היקף הראש מוזן בסנטימטרים (למשל 33.5)"); return; }
+    if (ga.error) { out.innerHTML = err(ga.error); return; }
+    const r = NT.fentonHead(sex, ga.w, ga.d, c);
+    if (r.error) { out.innerHTML = err(r.error); return; }
+    const T = { SMALL: ["bad", "היקף ראש קטן לגיל ההריון"], NORMAL: ["ok", "היקף ראש תקין לגיל ההריון"], LARGE: ["mid", "היקף ראש גדול לגיל ההריון"] }[r.cls];
+    const pct = r.percentile < 0.1 ? "פחות מ-0.1" : r.percentile > 99.9 ? "מעל 99.9" : r.percentile.toFixed(1);
+    const zp = (z) => clamp01((z + 3) / 6);
+    const g = gaugeHtml([[zp(-1.2816), "#DC2626"], [zp(1.2816), "#16A34A"], [1, "#D97706"]], zp(r.z), [[zp(-1.2816), "10"], [zp(1.2816), "90"]]);
+    let html = '<div class="card ' + T[0] + '"><b>' + T[1] + '</b>' + g + 'אחוזון: <span class="big">' + pct + '</span><br>Z-score: <span class="big">' + r.z.toFixed(2) + "</span></div>";
+    html += '<div class="card">למין ולשבוע הזה:<br>אחוזון 10: ' + r.p10.toFixed(1) + ' ס"מ<br>חציון: ' + r.median.toFixed(1) + ' ס"מ<br>אחוזון 90: ' + r.p90.toFixed(1) + ' ס"מ</div>';
+    out.innerHTML = html;
+  }
+  ["hc-sex", "hc-ga", "hc-c"].forEach((i) => $(i).addEventListener("input", renderHc));
+
   // ---------- צהבת ----------
   const num1 = (x) => (Math.round(x * 10) / 10).toString();
   function biliGauge(r, v) {
@@ -254,10 +272,10 @@
 
   // ---------- פרטי תינוק לכל החישובים ----------
   const BABY_MAP = {
-    "baby-ga": ["age-ga", "bili-ga", "pbili-ga", "sg-ga", "sp-ga", "dr-ga"],
+    "baby-ga": ["age-ga", "bili-ga", "pbili-ga", "sg-ga", "hc-ga", "sp-ga", "dr-ga"],
     "baby-birth": ["age-birth", "bili-birth", "pbili-birth", "pku-birth"],
     "baby-w": ["sg-g", "dr-w"],
-    "baby-sex": ["sg-sex"],
+    "baby-sex": ["sg-sex", "hc-sex"],
   };
   function babyPush(src) {
     const v = $(src).value;
