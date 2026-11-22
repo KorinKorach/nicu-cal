@@ -40,7 +40,7 @@
     b.addEventListener("click", function () {
       if (p.id === "pick") show("baby");
       else if (p.id === "baby") { babyFlow = false; syncFlow(); show("home"); }
-      else show(babyFlow ? "baby" : "home");
+      else show(babyFlow ? "pick" : "home");
       syncFlow();
     });
     row.appendChild(b);
