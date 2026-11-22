@@ -184,14 +184,34 @@
       im.className = "eqimg";
       im.src = p.img;
       im.alt = p.alt || p.title;
-      out.appendChild(im);
-    }
+      im.addEventListener("click", function () { openZoom(im.src, im.alt); });
+      out.appendChild(im);    }
     function upd() { done.hidden = ul.querySelectorAll("input:checked").length !== ul.querySelectorAll("input").length; }
     ul.addEventListener("change", upd);
     b.addEventListener("click", function () {
       ul.querySelectorAll("input").forEach(function (c) { c.checked = false; });
       upd();
     });
+  }
+  // הגדלת תמונה: חלון מסך מלא עם גלילה וכפתור סגירה
+  var zoomEl = null, zoomImg = null;
+  function closeZoom() { if (zoomEl) { zoomEl.hidden = true; document.body.style.overflow = ""; } }
+  function openZoom(src, alt) {
+    if (!zoomEl) {
+      zoomEl = document.createElement("div");
+      zoomEl.id = "eqzoom";
+      var x = document.createElement("button");
+      x.type = "button"; x.id = "eqzoomx"; x.textContent = "✕ סגירה";
+      x.addEventListener("click", closeZoom);
+      zoomImg = document.createElement("img");
+      zoomEl.appendChild(x); zoomEl.appendChild(zoomImg);
+      zoomEl.addEventListener("click", function (e) { if (e.target === zoomEl) closeZoom(); });
+      document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeZoom(); });
+      document.body.appendChild(zoomEl);
+    }
+    zoomImg.src = src; zoomImg.alt = alt || "";
+    zoomEl.hidden = false; zoomEl.scrollTop = 0; zoomEl.scrollLeft = 0;
+    document.body.style.overflow = "hidden";
   }
   var note = document.querySelector(".eqnote");
   sel.addEventListener("change", function () {

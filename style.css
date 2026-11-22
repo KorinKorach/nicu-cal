@@ -153,3 +153,8 @@ body.babyflow .clrhome{display:block}
 .eqfm{text-align:center;margin:6px 0 0;font-size:13px;color:#51606B}
 .eqsterile{margin:12px 0 0;padding:10px 12px;background:#E6F4EA;border:1px solid #9FD3AE;border-radius:10px;color:#1E5B34;font-size:13px;font-weight:600;line-height:1.5;text-align:center}
 .chip small{font-size:13px;font-weight:400;margin-inline-start:6px;color:#4A5B78}
+.eqimg{cursor:zoom-in}
+#eqzoom{position:fixed;inset:0;background:rgba(10,20,40,.9);overflow:auto;z-index:50;-webkit-overflow-scrolling:touch}
+#eqzoom[hidden]{display:none !important}
+#eqzoom img{display:block;width:max(900px,100%);max-width:none;height:auto;margin:0}
+#eqzoomx{position:fixed;top:12px;right:12px;z-index:60;padding:10px 18px;border:0;border-radius:24px;background:#fff;color:#15386B;font-weight:600;font-size:17px;font-family:inherit;box-shadow:0 2px 8px rgba(0,0,0,.4);cursor:pointer}
