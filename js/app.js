@@ -162,9 +162,9 @@
     if (r.photoFrom === undefined || !(h >= 0)) return "";
     if (r.pma) return h >= r.photoFrom ? '<p class="plateau"><b class="ptitle">הסף בפלאטו</b>בפגים, על פי Stanford, הסף מגיע לפלאטו כשגיל ההריון המצטבר הוא 35 שבועות. במקרה זה, הסף קבוע החל מגיל ' + r.photoFrom + " שעות ואינו עולה עוד (להמשך, ניתן להסתמך על הכלי AAP 2022)</p>" : "";
     const n = [];
-    if (h >= r.photoFrom) n.push("סף הפוטותרפיה בפלאטו: קבוע מגיל " + r.photoFrom + " שעות ואינו עולה עוד");
-    if (h >= r.exchFrom) n.push("סף חילוף הדם בפלאטו: קבוע מגיל " + r.exchFrom + " שעות ואינו עולה עוד");
-    return n.length ? '<p class="plateau">' + n.join("<br>") + "</p>" : "";
+    if (h >= r.photoFrom) n.push("סף הפוטותרפיה: קבוע מגיל " + r.photoFrom + " שעות ואינו עולה עוד");
+    if (h >= r.exchFrom) n.push("סף חילוף הדם: קבוע מגיל " + r.exchFrom + " שעות ואינו עולה עוד");
+    return n.length ? '<p class="plateau"><b class="ptitle">הסף בפלאטו</b>' + n.join("<br>") + "</p>" : "";
   }
   function biliCard(title, r, v, h) {
     let cls = "", status = "";
