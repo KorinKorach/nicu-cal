@@ -34,9 +34,11 @@
       d.querySelector(".aptot").textContent = sel.length === 5 ? "(ציון " + t + ")" : "";
       d.querySelector(".aptv").textContent = sel.length === 5 ? t : "—";
     });
-    let start = null, tick = null, fired = {}, ctx = null;
-    const clock = $("pr-clock"), btn = $("pr-clockbtn"), msg = $("pr-beep");
+    let base = 0, start = null, tick = null, fired = {}, ctx = null;
+    const clock = $("pr-clock"), msg = $("pr-beep");
+    const bS = $("pr-c-start"), bP = $("pr-c-stop"), bR = $("pr-c-resume"), bX = $("pr-c-reset");
     const fmt = (s) => String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0");
+    const secs = () => Math.floor((base + (start ? Date.now() - start : 0)) / 1000);
     function beep() {
       try {
         if (!ctx) return;
@@ -45,9 +47,15 @@
         o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime + 0.25);
       } catch (e) {}
     }
-    function stop() { clearInterval(tick); tick = null; start = null; btn.textContent = "התחל"; }
+    // מצבים: idle (אפס), run, paused
+    function ui() {
+      const st = tick ? "run" : base > 0 ? "paused" : "idle";
+      bS.disabled = st !== "idle"; bP.disabled = st !== "run"; bR.disabled = st !== "paused";
+      bX.disabled = st === "idle";
+    }
+    function halt() { clearInterval(tick); tick = null; if (start) base += Date.now() - start; start = null; ui(); }
     function step() {
-      const s = Math.floor((Date.now() - start) / 1000);
+      const s = secs();
       clock.textContent = fmt(s);
       [[60, "m1", "דקה"], [300, "m5", "5 דקות"], [600, "m10", "10 דקות"]].forEach(function (k) {
         if (s >= k[0] && !fired[k[1]]) {
@@ -56,16 +64,17 @@
           box.querySelector('[data-m="' + k[1] + '"]').open = true;
         }
       });
-      if (s >= 600) stop();
+      if (s >= 600) halt();
     }
-    btn.addEventListener("click", function () {
-      if (tick) {
-        stop(); return;
-      }
+    function run() {
       try { ctx = ctx || new (window.AudioContext || window.webkitAudioContext)(); if (ctx.state === "suspended") ctx.resume(); } catch (e) {}
-      fired = {}; msg.hidden = true; start = Date.now(); clock.textContent = "00:00"; btn.textContent = "עצור";
-      tick = setInterval(step, 250);
-    });
+      start = Date.now(); tick = setInterval(step, 250); ui();
+    }
+    bS.addEventListener("click", function () { base = 0; fired = {}; msg.hidden = true; clock.textContent = "00:00"; run(); });
+    bR.addEventListener("click", run);
+    bP.addEventListener("click", function () { halt(); clock.textContent = fmt(secs()); });
+    bX.addEventListener("click", function () { halt(); base = 0; fired = {}; msg.hidden = true; clock.textContent = "00:00"; ui(); });
+    ui();
   })();
 
   // ---------- חיתוך חבל הטבור: סיבה רק כשלא בוצע ----------
