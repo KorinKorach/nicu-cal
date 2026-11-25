@@ -92,16 +92,15 @@
     if (i < all.length - 1) r.push(all[i + 1]);
     return r;
   }
+  const openSteps = {};
   function render() {
-    const ga = NT.parseGA($("pr-ga").value), est = wOf("pr-w"), bw = wOf("pr-bw");
+    const ga = NT.parseGA($("pr-ga").value), est = wOf("pr-w");
     const errs = [];
     if (ga && ga.error) errs.push(ga.error);
     if (est !== null && est > 20) errs.push('המשקל מוזן בקילוגרמים (למשל 1.1), לא בגרמים');
-    if (bw !== null && bw > 20) errs.push('המשקל מוזן בקילוגרמים (למשל 1.1), לא בגרמים');
     $("pr-err").innerHTML = errs.map((e) => '<p class="err">' + e + "</p>").join("");
     const gaOk = ga && !ga.error ? ga : null;
     const estKg = est !== null && est > 0 && est <= 20 ? est : null;
-    const bwKg = bw !== null && bw > 0 && bw <= 20 ? bw : null;
 
     // אינטובציה: לפי הערכת המשקל
     const sizes = tubeSizes(estKg, gaOk);
@@ -113,38 +112,32 @@
     const row = estKg ? (estKg < 0.8 ? 0 : estKg <= 1.2 ? 1 : estKg <= 2.2 ? 2 : 3) : -1;
     trs.forEach(function (tr, i) { if (i > 0) tr.classList.toggle("hit", i - 1 === row); });
 
-    // קבלה למחלקה: משקל לידה אם הוזן, אחרת הערכה
-    const w = bwKg || estKg, src = bwKg ? "משקל לידה" : "הערכת משקל";
-    const need = '<em>יש להזין משקל</em>';
+    // תרופות: משקל הערכה. שבוע הריון נדרש לגנטמיצין
+    const w = estKg, need = '<em>יש להזין משקל</em>';
     const g = Math.round((w || 0) * 1000);
-    // סורפקטנט: 200 מ"ג/ק"ג, 80 מ"ג/מ"ל
-    $("pr-sur").innerHTML = w ? 'סורפקטנט - מינון <b>' + ml(cut2((200 * w) / 80)) + "</b> " + ML + ' <small>(200 מ"ג/ק"ג ÷ 80 מ"ג/מ"ל: 200 × ' + n(mg(w)) + " ÷ 80)</small>" : "סורפקטנט - " + need;
-    // אמפיצילין, גנטמיצין, קפאין: לפי מחשבון התרופות
+    const D = {}; // תוצאה לכל תרופה: { name, lines:[html], steps }
+    D.sur = { name: "סורפקטנט", lines: w ? ["מינון <b>" + ml(cut2((200 * w) / 80)) + "</b> " + ML] : [need],
+      steps: w ? '<ol class="steps"><li>200 מ"ג/ק"ג ÷ 80 מ"ג/מ"ל</li><li>200 × ' + n(mg(w)) + " ÷ 80 = <b>" + n(ml(cut2((200 * w) / 80))) + " " + ML + "</b></li></ol>" : "" };
     const amp = w ? NT.ampicillin(g) : null;
-    $("pr-amp").innerHTML = amp && !amp.error ? "אמפיצילין - מינון <b>" + mg(amp.dose) + "</b> " + MG + "<br>להכנה בתוך 5 " + ML + " של סליין - <b>" + mg(amp.withExt) + "</b> " + MG : "אמפיצילין - " + need;
-    $("pr-amp-s").innerHTML = amp && !amp.error ? NT.stepsHtml("amp", amp) : "";
-    let gen = null;
-    if (w && gaOk) gen = NT.gentamicin(g, gaOk.w);
+    D.amp = amp && !amp.error ? { name: "אמפיצילין", lines: ["מינון <b>" + mg(amp.dose) + "</b> " + MG, "להכנה בתוך 5 " + ML + " של סליין - <b>" + mg(amp.withExt) + "</b> " + MG], steps: NT.stepsHtml("amp", amp) } : { name: "אמפיצילין", lines: [need], steps: "" };
+    const gen = w && gaOk ? NT.gentamicin(g, gaOk.w) : null;
     if (gen && !gen.error) {
       const fr = gaOk.w <= 29 ? "פעם ב-48 שעות" : gaOk.w <= 34 ? "פעם ב-36 שעות" : "";
-      $("pr-gen").innerHTML = "גארמיצין - מינון <b>" + mg(gen.dose) + "</b> " + MG + (gen.mode === "pure" ? "<br>תרופה טהורה (<bdi dir=ltr>PURE</bdi>) עם מאריך: <b>" + mg(gen.withExt) + "</b> " + MG : "<br>להכנה בתוך 5 " + ML + " של סליין - <b>" + mg(gen.withExt) + "</b> " + MG) + (fr ? " <small>(" + fr + ")</small>" : "");
-      $("pr-gen-s").innerHTML = NT.stepsHtml("gen", gen);
-    } else {
-      $("pr-gen").innerHTML = "גארמיצין - " + (w ? "<em>יש להזין שבוע הריון</em>" : need);
-      $("pr-gen-s").innerHTML = "";
-    }
-    // פנטניל: 1 מיקרוגרם/ק"ג
-    if (w) {
-      const f = cut2(w);
-      $("pr-fen").innerHTML = "פנטניל - להכין <b>" + f.toFixed(2) + "</b> מיקרוגרם מהולים למתן בפוש איטי";
-      $("pr-fen-s").innerHTML = '<ol class="steps"><li>מינון: 1 מיקרוגרם/ק"ג × ' + n(mg(w)) + ' = <b>' + n(f.toFixed(2)) + ' מיקרוגרם</b></li><li>יש לשאוב 0.1 מ״ל של התרופה (שהם 5 מיקרוגרם), ולהשלים עד 1 מ״ל עם <bdi dir="ltr">NACL 0.9%</bdi></li><li>לאחר המיהול יהיו במזרק 5 מיקרוגרם ב-1 מ״ל</li><li>ולתת לפי המינון הנדרש למשקל (<b>' + n(f.toFixed(2)) + '</b> מיקרוגרם)</li></ol>';
-    } else { $("pr-fen").innerHTML = "פנטניל - " + need; $("pr-fen-s").innerHTML = ""; }
-    // קפאין בקבלה: העמסה 20 מ"ג/ק"ג, ואחרי 24 שעות 10 מ"ג/ק"ג
+      D.gen = { name: "גארמיצין", lines: ["מינון <b>" + mg(gen.dose) + "</b> " + MG, gen.mode === "pure" ? "תרופה טהורה (<bdi dir=ltr>PURE</bdi>) עם מאריך: <b>" + mg(gen.withExt) + "</b> " + MG : "להכנה בתוך 5 " + ML + " של סליין - <b>" + mg(gen.withExt) + "</b> " + MG].concat(fr ? [fr] : []), steps: NT.stepsHtml("gen", gen) };
+    } else D.gen = { name: "גארמיצין", lines: [w ? "<em>יש להזין שבוע הריון</em>" : need], steps: "" };
+    const f = w ? cut2(w) : 0;
+    D.fen = { name: "פנטניל", lines: w ? ["להכין <b>" + f.toFixed(2) + "</b> מיקרוגרם מהולים למתן בפוש איטי"] : [need],
+      steps: w ? '<ol class="steps"><li>מינון: 1 מיקרוגרם/ק"ג × ' + n(mg(w)) + ' = <b>' + n(f.toFixed(2)) + ' מיקרוגרם</b></li><li>יש לשאוב 0.1 מ״ל של התרופה (שהם 5 מיקרוגרם), ולהשלים עד 1 מ״ל עם <bdi dir="ltr">NACL 0.9%</bdi></li><li>לאחר המיהול יהיו במזרק 5 מיקרוגרם ב-1 מ״ל</li><li>ולתת לפי המינון הנדרש למשקל (<b>' + n(f.toFixed(2)) + "</b> מיקרוגרם)</li></ol>" : "" };
     const caf = w ? NT.caffeine(g, 20) : null;
-    $("pr-caf").innerHTML = caf && !caf.error ? "קפאין בקבלה - מינון <b>" + mg(caf.dose) + "</b> " + MG + "<br>עם מאריך: <b>" + mg(caf.withExt) + "</b> " + MG : "קפאין בקבלה - " + need;
-    $("pr-caf-s").innerHTML = caf && !caf.error ? NT.stepsHtml("caf", caf) : "";
-    $("pr-caf2").innerHTML = w ? 'לא לשכוח לתת קפאין אחרי 24 שעות - מינון <b>' + mg(10 * w) + "</b> " + MG + ' <small>(10 מ"ג/ק"ג × ' + n(mg(w)) + ")</small>" : "לא לשכוח לתת קפאין אחרי 24 שעות - " + need;
-
+    D.caf = caf && !caf.error ? { name: "קפאין בקבלה", lines: ["מינון <b>" + mg(caf.dose) + "</b> " + MG, "עם מאריך: <b>" + mg(caf.withExt) + "</b> " + MG], steps: NT.stepsHtml("caf", caf) } : { name: "קפאין בקבלה", lines: [need], steps: "" };
+    D.caf2 = { name: "קפאין אחרי 24 שעות", lines: w ? ["מינון <b>" + mg(10 * w) + "</b> " + MG] : [need],
+      steps: w ? '<ol class="steps"><li>10 מ"ג/ק"ג × ' + n(mg(w)) + " = <b>" + n(mg(10 * w)) + " " + MG + "</b></li></ol>" : "" };
+    const chosen = [...document.querySelectorAll("#preemie [data-d]:checked")].map((c) => c.dataset.d);
+    $("pr-drugout").innerHTML = chosen.map(function (k) {
+      const d = D[k];
+      return '<div class="card"><b class="ctitle">' + d.name + "</b>" + d.lines.map((l) => "<div>" + l + "</div>").join("") +
+        (d.steps ? '<details class="prsteps" data-k="' + k + '"' + (openSteps[k] ? " open" : "") + "><summary>הצג את החישוב</summary>" + d.steps + "</details>" : "") + "</div>";
+    }).join("");
     // הזנה
     const li = (t, a, b, u) => "<li>" + t + (w ? " (" + parseFloat((a * w).toFixed(2)) + "-" + parseFloat((b * w).toFixed(2)) + " " + u + ")" : "") + "</li>";
     $("pr-nut").innerHTML =
@@ -156,22 +149,12 @@
       "<li>נפח מומלץ:</li>";
     const vr = w ? (g < 1000 ? 0 : g <= 1500 ? 1 : 2) : -1;
     $("pr-vol").querySelectorAll("tr").forEach(function (tr, i) { if (i > 0) tr.classList.toggle("hit", i - 1 === vr); });
-    checkTemp();
   }
-  // חום: אם עברה רבע שעה משעת הקבלה והמדידה לא סומנה, השורה מודגשת
-  function checkTemp() {
-    const t = $("pr-time").value, row = $("pr-temp");
-    let late = false;
-    if (t && !row.querySelector("input").checked) {
-      const p = t.split(":"), d = new Date();
-      d.setHours(+p[0], +p[1], 0, 0);
-      late = Date.now() > d.getTime() + 15 * 60000;
-    }
-    row.classList.toggle("late", late);
-  }
-  ["pr-ga", "pr-w", "pr-bw"].forEach((i) => $(i).addEventListener("input", render));
-  $("pr-time").addEventListener("input", checkTemp);
-  $("pr-temp").addEventListener("change", checkTemp);
-  setInterval(checkTemp, 60000);
+  ["pr-ga", "pr-w"].forEach((i) => $(i).addEventListener("input", render));
+  document.querySelectorAll("#preemie [data-d]").forEach((c) => c.addEventListener("change", render));
+  $("pr-drugout").addEventListener("toggle", function (e) { if (e.target.dataset.k) openSteps[e.target.dataset.k] = e.target.open; }, true);
+  $("pr-eqsel").addEventListener("change", function () {
+    ["room", "vent", "int"].forEach((k) => ($("pr-eq-" + k).hidden = $("pr-eqsel").value !== k));
+  });
   render();
 })();

@@ -209,25 +209,63 @@
       <option>כיסוי רחב טווח פחות מ 4 שעות</option><option>כיסוי רחב טווח מעל 4 שעות</option><option>ללא טיפול אנטיביוטי</option></select></label>
     <label class="chk eqi"><input type="checkbox"><span>מתן מגנזיום נוירופרוטקטיבי</span></label>
   </details>
-
-  <details class="dt"><summary>ציוד - חדר</summary>
+  <details class="dt"><summary>שעון אפגר</summary>
+    <div class="prtimer"><span id="pr-clock" class="big">00:00</span><button type="button" class="nowbtn" id="pr-clockbtn">התחל</button></div>
+    <p class="prbeep" id="pr-beep" hidden></p>
+    <details><summary>הצג מדריך שעון אפגר</summary>
+      <div style="overflow-x:auto"><table class="t">
+        <tr><th>מבחן אפגר- מה בודקים?</th><th>ציון 0</th><th>ציון 1</th><th>ציון 2</th></tr>
+        <tr><td>דופק</td><td>ללא</td><td>פחות מ100</td><td>יתר מ-100</td></tr>
+        <tr><td>נשימה</td><td>ללא</td><td>איטית</td><td>סדירה עם בכי</td></tr>
+        <tr><td>טונוס שרירים</td><td>גפיים רפויות</td><td>תנועה קלה</td><td>תנועות מרובות</td></tr>
+        <tr><td>צבע עור</td><td>חיוור/כחול</td><td>גפיים כחולות</td><td>ורוד</td></tr>
+        <tr><td>תגובה למגע</td><td>אין</td><td>עיוות פנים</td><td>בכי</td></tr>
+      </table></div>
+    </details>
+    <div id="pr-apgar"></div>
+  </details>
+  <details class="dt"><summary>חיתוך מושהה של חבל הטבור</summary>
+    <label class="chk eqi"><input type="radio" name="pr-cord"><span>דקה</span></label>
+    <label class="chk eqi"><input type="radio" name="pr-cord"><span>פחות מדקה</span></label>
+    <label class="chk eqi"><input type="radio" name="pr-cord" id="pr-cord-no"><span>לא בוצע</span></label>
+    <label id="pr-cord-why" hidden>סיבה: <input type="text" autocomplete="off"></label>
+  </details>
+  <details class="dt"><summary>קבלה למחלקה</summary>
+    <label class="chk eqi"><input type="checkbox"><span>ניטור</span></label>
+    <label class="chk eqi"><input type="checkbox"><span>מדידת לחץ דם</span></label>
+    <label class="chk eqi" id="pr-temp"><input type="checkbox"><span>מדידת חום תוך רבע שעה מקבלה (יעד <bdi dir="ltr">36.0-37.5</bdi>, אופטימאלי מעל <bdi dir="ltr">36.5</bdi>)</span></label>
+    <label class="chk eqi"><input type="checkbox"><span>כיוון מנשם</span></label>
+    <ul class="stdnote">
+      <li>שיטת הנשמה מועדפת (ב<bdi dir="ltr">RDS</bdi> נבחר <bdi dir="ltr">HFOV</bdi>)</li>
+      <li><bdi dir="ltr">MAP</bdi> התחלתי (בהתאם ללחצי ההנשמה שנדרשו לצורך חמצון הפג בחדר הלידה)</li>
+      <li><bdi dir="ltr">AMP</bdi> (כיוון לפי רטט במגע, תדר התחלתי <bdi dir="ltr">15</bdi> הרץ)</li>
+      <li>ריכוז חמצן מינימלי לפי יעד סטורציה (בפגים עם <bdi dir="ltr">RDS</bdi> <bdi dir="ltr">90-93%</bdi> בקבלה)</li>
+    </ul>
+    <p class="eqhead">בדיקות מעבדה</p>
+    <label class="chk eqi"><input type="checkbox"><span>רמת גלוקוז</span></label>
+    <label class="chk eqi"><input type="checkbox"><span>גזים בדם</span></label>
+    <label class="chk eqi"><input type="checkbox"><span>ספירת דם</span></label>
+    <label class="chk eqi"><input type="checkbox"><span>תרבית דם</span></label>
+    <label class="chk eqi"><input type="checkbox"><span>סוג דם (דם טבורי)</span></label>
+    <label class="chk eqi"><input type="checkbox"><span><bdi dir="ltr">G6PD</bdi> (דם טבורי)</span></label>
+    <label class="chk eqi"><input type="checkbox"><span>שתן ל-<bdi dir="ltr">CMV</bdi></span></label>
+  </details>
+  <details class="dt"><summary>הכנת ציוד</summary>
+    <label>בחר פעולה <select id="pr-eqsel"><option value="">בחרו…</option><option value="room">ציוד - חדר</option><option value="vent">ציוד - הנשמה</option><option value="int">ציוד - אינטובציה</option></select></label>
+    <div id="pr-eq-room" class="preq" hidden>
     <label class="chk eqi"><input type="checkbox"><span>אינקובטור מחומם + שאטל</span></label>
     <label class="chk eqi"><input type="checkbox"><span>חימום חדר ל-<bdi dir="ltr">26°C</bdi></span></label>
     <label class="chk eqi"><input type="checkbox"><span>הכנת שקיות חימום. במידה וניתוח קיסרי, לתת לאח/ות חדר ניתוח</span></label>
     <label class="chk eqi"><input type="checkbox"><span>מזרן כימי</span></label>
     <label class="chk eqi"><input type="checkbox"><span>סדינים חמים</span></label>
     <label class="chk eqi"><input type="checkbox"><span>חימום נוסף עם <bdi dir="ltr">blower</bdi> נייד</span></label>
-    <label class="chk eqi"><input type="checkbox"><span>כובע ליילוד</span></label>
-  </details>
-
-  <details class="dt"><summary>ציוד - הנשמה</summary>
+    <label class="chk eqi"><input type="checkbox"><span>כובע ליילוד</span></label></div>
+    <div id="pr-eq-vent" class="preq" hidden>
     <label class="chk eqi"><input type="checkbox"><span>סנסור דופק סטורציה ומדבקות מוניטור</span></label>
     <label class="chk eqi"><input type="checkbox"><span>מסיכה 0, 00</span></label>
     <label class="chk eqi"><input type="checkbox"><span>כיוון ריכוז חמצן ולחצי הנשמה במפוח יד/<bdi dir="ltr">neopuff</bdi></span></label>
-    <label class="chk eqi"><input type="checkbox"><span>ציוד לשאיבת הפרשות - סקשן</span></label>
-  </details>
-
-  <details class="dt"><summary>ציוד - אינטובציה</summary>
+    <label class="chk eqi"><input type="checkbox"><span>ציוד לשאיבת הפרשות - סקשן</span></label></div>
+    <div id="pr-eq-int" class="preq" hidden>
     <div style="overflow-x:auto"><table class="t" id="pr-tubes">
       <tr><th>משקל</th><th>שבוע הריון</th><th>גודל טובוס (ס"מ)</th><th>קטטר סקשן</th></tr>
       <tr><td>&lt;800</td><td>22-25</td><td>2.5</td><td>5</td></tr>
@@ -244,66 +282,17 @@
     <label class="chk eqi"><input type="checkbox"><span>חומר סיכוך</span></label>
     <label class="chk eqi"><input type="checkbox"><span>קיבוע</span></label>
     <label class="chk eqi"><input type="checkbox"><span>מנשם נייד</span></label>
-    <label class="chk eqi"><input type="checkbox"><span>מוניטור נייד וסנסור סטורציה מתאים</span></label>
+    <label class="chk eqi"><input type="checkbox"><span>מוניטור נייד וסנסור סטורציה מתאים</span></label></div>
   </details>
-
-  <details class="dt"><summary>שעון אפגר</summary>
-    <div class="prtimer"><span id="pr-clock" class="big">00:00</span><button type="button" class="nowbtn" id="pr-clockbtn">התחל</button></div>
-    <p class="prbeep" id="pr-beep" hidden></p>
-    <details><summary>הצג מדריך שעון אפגר</summary>
-      <div style="overflow-x:auto"><table class="t">
-        <tr><th>מבחן אפגר- מה בודקים?</th><th>ציון 0</th><th>ציון 1</th><th>ציון 2</th></tr>
-        <tr><td>דופק</td><td>ללא</td><td>פחות מ100</td><td>יתר מ-100</td></tr>
-        <tr><td>נשימה</td><td>ללא</td><td>איטית</td><td>סדירה עם בכי</td></tr>
-        <tr><td>טונוס שרירים</td><td>גפיים רפויות</td><td>תנועה קלה</td><td>תנועות מרובות</td></tr>
-        <tr><td>צבע עור</td><td>חיוור/כחול</td><td>גפיים כחולות</td><td>ורוד</td></tr>
-        <tr><td>תגובה למגע</td><td>אין</td><td>עיוות פנים</td><td>בכי</td></tr>
-      </table></div>
-    </details>
-    <div id="pr-apgar"></div>
+  <details class="dt"><summary>תרופות</summary>
+    <label class="chk eqi"><input type="checkbox" data-d="sur"><span>סורפקטנט</span></label>
+    <label class="chk eqi"><input type="checkbox" data-d="amp"><span>אמפיצילין</span></label>
+    <label class="chk eqi"><input type="checkbox" data-d="gen"><span>גארמיצין</span></label>
+    <label class="chk eqi"><input type="checkbox" data-d="fen"><span>פנטניל</span></label>
+    <label class="chk eqi"><input type="checkbox" data-d="caf"><span>קפאין בקבלה</span></label>
+    <label class="chk eqi"><input type="checkbox" data-d="caf2"><span>קפאין אחרי 24 שעות</span></label>
+    <div id="pr-drugout" class="out"></div>
   </details>
-
-  <details class="dt"><summary>חיתוך מושהה של חבל הטבור</summary>
-    <label class="chk eqi"><input type="radio" name="pr-cord"><span>דקה</span></label>
-    <label class="chk eqi"><input type="radio" name="pr-cord"><span>פחות מדקה</span></label>
-    <label class="chk eqi"><input type="radio" name="pr-cord" id="pr-cord-no"><span>לא בוצע</span></label>
-    <label id="pr-cord-why" hidden>סיבה: <input type="text" autocomplete="off"></label>
-  </details>
-
-  <details class="dt"><summary>קבלה למחלקה</summary>
-    <label>משקל לידה (בק"ג, למשל 1.1) <input id="pr-bw" type="number" inputmode="decimal" step="0.001" min="0"></label>
-    <label>שעת קבלה למחלקה <input id="pr-time" type="time"></label>
-    <label class="chk eqi"><input type="checkbox"><span>ניטור</span></label>
-    <label class="chk eqi"><input type="checkbox"><span>מדידת לחץ דם</span></label>
-    <label class="chk eqi" id="pr-temp"><input type="checkbox"><span>מדידת חום תוך רבע שעה מקבלה (יעד <bdi dir="ltr">36.0-37.5</bdi>, אופטימאלי מעל <bdi dir="ltr">36.5</bdi>)</span></label>
-    <label class="chk eqi"><input type="checkbox"><span>כיוון מנשם</span></label>
-    <ul class="stdnote">
-      <li>שיטת הנשמה מועדפת (ב<bdi dir="ltr">RDS</bdi> נבחר <bdi dir="ltr">HFOV</bdi>)</li>
-      <li><bdi dir="ltr">MAP</bdi> התחלתי (בהתאם ללחצי ההנשמה שנדרשו לצורך חמצון הפג בחדר הלידה)</li>
-      <li><bdi dir="ltr">AMP</bdi> (כיוון לפי רטט במגע, תדר התחלתי <bdi dir="ltr">15</bdi> הרץ)</li>
-      <li>ריכוז חמצן מינימלי לפי יעד סטורציה (בפגים עם <bdi dir="ltr">RDS</bdi> <bdi dir="ltr">90-93%</bdi> בקבלה)</li>
-    </ul>
-    <p class="eqhead">תרופות</p>
-    <label class="chk eqi"><input type="checkbox"><span id="pr-sur"></span></label>
-    <label class="chk eqi"><input type="checkbox"><span id="pr-amp"></span></label>
-    <details class="prsteps"><summary>הצג את החישוב</summary><div id="pr-amp-s"></div></details>
-    <label class="chk eqi"><input type="checkbox"><span id="pr-gen"></span></label>
-    <details class="prsteps"><summary>הצג את החישוב</summary><div id="pr-gen-s"></div></details>
-    <label class="chk eqi"><input type="checkbox"><span id="pr-fen"></span></label>
-    <details class="prsteps"><summary>הצג את החישוב</summary><div id="pr-fen-s"></div></details>
-    <label class="chk eqi"><input type="checkbox"><span id="pr-caf"></span></label>
-    <details class="prsteps"><summary>הצג את החישוב</summary><div id="pr-caf-s"></div></details>
-    <label class="chk eqi"><input type="checkbox"><span id="pr-caf2"></span></label>
-    <p class="eqhead">בדיקות מעבדה</p>
-    <label class="chk eqi"><input type="checkbox"><span>רמת גלוקוז</span></label>
-    <label class="chk eqi"><input type="checkbox"><span>גזים בדם</span></label>
-    <label class="chk eqi"><input type="checkbox"><span>ספירת דם</span></label>
-    <label class="chk eqi"><input type="checkbox"><span>תרבית דם</span></label>
-    <label class="chk eqi"><input type="checkbox"><span>סוג דם (דם טבורי)</span></label>
-    <label class="chk eqi"><input type="checkbox"><span><bdi dir="ltr">G6PD</bdi> (דם טבורי)</span></label>
-    <label class="chk eqi"><input type="checkbox"><span>שתן ל-<bdi dir="ltr">CMV</bdi></span></label>
-  </details>
-
   <details class="dt"><summary>הזנה</summary>
     <p class="stdnote">הוראות להזנה על פי משקל הפג - המלצות ביממה הראשונה לחיים:</p>
     <ul class="stdnote" id="pr-nut"></ul>
@@ -317,7 +306,6 @@
     <ul class="stdnote"><li><bdi dir="ltr">D10P3.5WO</bdi></li><li><bdi dir="ltr">D7.5P3.5WO</bdi></li><li><bdi dir="ltr">D5P2.8WO</bdi></li><li><bdi dir="ltr">GLU 5%</bdi></li><li><bdi dir="ltr">GLU 10%</bdi></li><li><bdi dir="ltr">SMOF+VITAMINS</bdi></li><li><bdi dir="ltr">NACL 0.45%</bdi> להזלפה בקטטר עורקי</li></ul>
     <p class="stdnote">בפג יציב: להתחיל מוקדם ככל הניתן הזנה אנטרלית בחלב אם או תרומה, או טיפול פה בקולוסטרום</p>
   </details>
-
   <details class="dt"><summary>עדכון הורים</summary>
     <label class="chk eqi"><input type="checkbox"><span>עדכון הורים על מצב הפג</span></label>
     <label class="chk eqi"><input type="checkbox"><span>הסבר על קולוסטרום וחלב אם תרומה לפי סטטוס <bdi dir="ltr">cmv</bdi></span></label>
@@ -325,7 +313,8 @@
   </details>
 
   <details class="src"><summary>מקור והערות</summary>
-    <p>נוצר ונבנה במקור על ידי ד"ר מורן בסכס, רופאת ילדים בכירה.</p></details>
+    <p>נוצר ונבנה במקור על ידי ד"ר מורן בסכס, רופאת ילדים בכירה.</p>
+    <p><a href="https://my.mashlom.me/main/wolfson/new-preemie" target="_blank" rel="noopener">הכלי המקורי באתר <bdi dir="ltr">mashlom.me</bdi></a></p></details>
 </section>
 <section id="equip" class="panel">
   <h2>הכנת ציוד לפעולות</h2>

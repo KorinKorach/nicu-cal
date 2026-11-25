@@ -176,3 +176,5 @@ body.babyflow .clrhome{display:block}
 .apbtn.sel{background:#15386B;color:#fff;border-color:#15386B}
 .aptot{color:var(--blue);font-weight:600}
 .prsteps{margin:0 0 6px;padding-inline-start:34px}
+#preemie .preq details.dt{border:0;padding:0}
+#preemie .preq>details,#preemie .preq{margin:0}
