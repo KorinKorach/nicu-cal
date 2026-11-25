@@ -120,7 +120,7 @@
     const L2 = (v, u, d) => "להכנה בתוך 5 " + ML + " של " + (d || "סליין") + ": <b>" + v + "</b> " + u;
     const sur = w ? ml(cut2((200 * w) / 80)) : "";
     D.sur = { lines: w ? ["מינון: <b>" + sur + "</b> " + ML] : [need],
-      steps: w ? '<ol class="steps"><li>200 מ"ג/ק"ג ÷ 80 מ"ג/מ"ל</li><li><bdi dir="ltr">(' + mg(w) + " × 200) ÷ 80 = " + sur + "</bdi> " + ML + "</li></ol>" : "" };
+      steps: w ? '<ol class="steps"><li>200 מ"ג/ק"ג ÷ 80 מ"ג/מ"ל</li><li>(' + n(mg(w)) + " × " + n(200) + ") ÷ " + n(80) + " = " + n(sur) + " " + ML + "</li></ol>" : "" };
     const amp = w ? NT.ampicillin(g) : null;
     D.amp = amp && !amp.error ? { lines: [L1(mg(amp.dose), MG), L2(mg(amp.withExt), MG)], steps: NT.stepsHtml("amp", amp) } : { lines: [need], steps: "" };
     const gen = w && gaOk ? NT.gentamicin(g, gaOk.w) : null;
