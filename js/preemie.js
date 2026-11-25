@@ -123,7 +123,7 @@
     const gen = w && gaOk ? NT.gentamicin(g, gaOk.w) : null;
     if (gen && !gen.error) {
       const fr = gaOk.w <= 29 ? "פעם ב-48 שעות" : gaOk.w <= 34 ? "פעם ב-36 שעות" : "";
-      D.gen = { name: "גארמיצין", lines: ["מינון <b>" + mg(gen.dose) + "</b> " + MG, gen.mode === "pure" ? "תרופה טהורה (<bdi dir=ltr>PURE</bdi>) עם מאריך: <b>" + mg(gen.withExt) + "</b> " + MG : "להכנה בתוך 5 " + ML + " של סליין - <b>" + mg(gen.withExt) + "</b> " + MG].concat(fr ? [fr] : []), steps: NT.stepsHtml("gen", gen) };
+      D.gen = { name: "גארמיצין", lines: ["מינון <b>" + mg(gen.dose) + "</b> " + MG, gen.mode === "pure" ? "תרופה טהורה (<bdi dir=ltr>PURE</bdi>) עם מאריך: <b>" + mg(gen.withExt) + "</b> " + MG : "להכנה בתוך 5 " + ML + " של סליין - <b>" + mg(gen.withExt) + "</b> " + MG].concat(fr ? [fr] : [], ["לתינוק בין 0 עד 7 ימים"]), steps: NT.stepsHtml("gen", gen) };
     } else D.gen = { name: "גארמיצין", lines: [w ? "<em>יש להזין שבוע הריון</em>" : need], steps: "" };
     const f = w ? cut2(w) : 0;
     D.fen = { name: "פנטניל", lines: w ? ["להכין <b>" + f.toFixed(2) + "</b> מיקרוגרם מהולים למתן בפוש איטי"] : [need],
