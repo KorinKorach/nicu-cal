@@ -187,3 +187,8 @@ body.babyflow .clrhome{display:block}
 .prclockbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:4px 0 8px}
 .prclockbtns .nowbtn{margin:0;padding:10px 0;font-size:15px}
 .prclockbtns .nowbtn:disabled{opacity:.4;cursor:not-allowed}
+.prbar{display:flex;gap:8px;margin:6px 0 10px}
+.prbar .nowbtn{margin:0;flex:1}
+.prrec{display:flex;gap:8px;align-items:center;margin:6px 0}
+.prrec .nowbtn{margin:0}
+.prrec [data-open]{flex:1;text-align:start}

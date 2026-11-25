@@ -74,6 +74,16 @@
     bP.addEventListener("click", function () { if (tick) { halt(); clock.textContent = fmt(secs()); } else run(); });
     bX.addEventListener("click", function () { halt(); base = 0; fired = {}; msg.hidden = true; clock.textContent = "00:00"; ui(); });
     ui();
+    NT.apgar = {
+      get: function () { return { elapsed: base + (start ? Date.now() - start : 0), running: !!tick, fired: fired, at: Date.now() }; },
+      set: function (st) {
+        halt(); msg.hidden = true; fired = Object.assign({}, st.fired || {});
+        base = (st.elapsed || 0) + (st.running ? Date.now() - (st.at || Date.now()) : 0);
+        if (st.running) { if (base >= 600000) { base = 600000; fired = { m1: 1, m5: 1, m10: 1 }; } else run(); }
+        clock.textContent = fmt(secs()); ui();
+      },
+      reset: function () { halt(); base = 0; fired = {}; msg.hidden = true; clock.textContent = "00:00"; ui(); }
+    };
   })();
 
   // ---------- חיתוך חבל הטבור: סיבה רק כשלא בוצע ----------
@@ -173,4 +183,104 @@
     ["room", "vent", "int"].forEach((k) => ($("pr-eq-" + k).hidden = $("pr-eqsel").value !== k));
   });
   render();
+
+  // ---------- שמירה אוטומטית ולידות קודמות (מקומי במכשיר, 24 שעות) ----------
+  (function () {
+    const KEY = "nc_preemie_v1", TTL = 24 * 3600 * 1000, root = $("preemie");
+    let store = { cur: null, recs: {} }, restoring = false, timer = null;
+    try { const x = JSON.parse(localStorage.getItem(KEY)); if (x && x.recs) store = x; } catch (e) {}
+    const persist = () => { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} };
+    function purge() {
+      const now = Date.now();
+      Object.keys(store.recs).forEach((id) => { if (now - store.recs[id].u > TTL) delete store.recs[id]; });
+      if (!store.recs[store.cur]) store.cur = null;
+    }
+    const boxes = () => [...root.querySelectorAll('input[type=checkbox],input[type=radio]')];
+    function snapshot() {
+      return {
+        f: boxes().map((x) => (x.checked ? 1 : 0)),
+        t: [$("pr-ga").value, $("pr-w").value],
+        cw: root.querySelector("#pr-cord-why input").value,
+        sel: ["pr-ster", "pr-mabx", "pr-eqsel"].map((id) => $(id).value),
+        ap: [...root.querySelectorAll(".apbtn")].map((b) => (b.classList.contains("sel") ? 1 : 0)),
+        tm: NT.apgar.get(),
+      };
+    }
+    const isEmpty = (d) => !d.t[0] && !d.t[1] && !d.cw && d.sel.every((v) => !v) && !d.f.includes(1) && !d.ap.includes(1) && !d.tm.elapsed && !d.tm.running;
+    function clearForm() {
+      restoring = true;
+      boxes().forEach((x) => (x.checked = false));
+      ["pr-ga", "pr-w"].forEach((id) => ($(id).value = ""));
+      root.querySelector("#pr-cord-why input").value = "";
+      ["pr-ster", "pr-mabx", "pr-eqsel"].forEach((id) => ($(id).value = ""));
+      $("pr-eqsel").dispatchEvent(new Event("change"));
+      $("pr-cord-why").hidden = true;
+      root.querySelectorAll(".apbtn.sel").forEach((b) => b.classList.remove("sel"));
+      root.querySelectorAll(".aptv").forEach((e) => (e.textContent = "—"));
+      root.querySelectorAll(".aptot").forEach((e) => (e.textContent = ""));
+      NT.apgar.reset();
+      render();
+      restoring = false;
+    }
+    function apply(d) {
+      clearForm();
+      restoring = true;
+      const bx = boxes();
+      d.f.forEach((v, i) => { if (bx[i]) bx[i].checked = !!v; });
+      $("pr-ga").value = d.t[0]; $("pr-w").value = d.t[1];
+      root.querySelector("#pr-cord-why input").value = d.cw || "";
+      $("pr-cord-why").hidden = !$("pr-cord-no").checked;
+      ["pr-ster", "pr-mabx", "pr-eqsel"].forEach((id, i) => ($(id).value = d.sel[i] || ""));
+      $("pr-eqsel").dispatchEvent(new Event("change"));
+      root.querySelectorAll(".apbtn").forEach((b, i) => { if (d.ap[i]) b.click(); });
+      NT.apgar.set(d.tm);
+      render();
+      restoring = false;
+    }
+    function save() {
+      if (restoring) return;
+      const d = snapshot();
+      if (isEmpty(d)) { if (store.cur) { delete store.recs[store.cur]; store.cur = null; persist(); list(); } return; }
+      if (!store.cur) { store.cur = "r" + Date.now(); store.recs[store.cur] = { c: Date.now() }; }
+      const r = store.recs[store.cur]; r.d = d; r.u = Date.now();
+      persist(); list();
+    }
+    const later = () => { clearTimeout(timer); timer = setTimeout(save, 300); };
+    function list() {
+      purge();
+      const ids = Object.keys(store.recs).filter((id) => id !== store.cur).sort((a, b) => store.recs[b].c - store.recs[a].c);
+      $("pr-prev").hidden = !ids.length;
+      $("pr-prevlist").innerHTML = ids.map(function (id) {
+        const r = store.recs[id], tm = new Date(r.c).toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit" });
+        return '<div class="prrec"><button type="button" class="nowbtn" data-open="' + id + '"><bdi>' + (r.d.t[0] || "—") + "</bdi> · <bdi>" + (r.d.t[1] || "—") + '</bdi> ק"ג · <bdi>' + tm + '</bdi></button><button type="button" class="nowbtn" data-del="' + id + '" aria-label="מחיקה">✕</button></div>';
+      }).join("");
+    }
+    root.addEventListener("input", later);
+    root.addEventListener("change", later);
+    root.addEventListener("click", later);
+    setInterval(function () { if (NT.apgar.get().running) save(); }, 2000);
+    $("pr-new").addEventListener("click", function () {
+      clearTimeout(timer); save();
+      store.cur = null; persist();
+      clearForm(); list();
+    });
+    $("pr-clear").addEventListener("click", function () {
+      clearTimeout(timer);
+      if (store.cur) delete store.recs[store.cur];
+      store.cur = null; persist();
+      clearForm(); list();
+    });
+    $("pr-prevlist").addEventListener("click", function (e) {
+      const o = e.target.closest("[data-open]"), x = e.target.closest("[data-del]");
+      if (o) {
+        clearTimeout(timer); save();
+        const id = o.dataset.open;
+        if (!store.recs[id]) return;
+        store.cur = id; persist(); apply(store.recs[id].d); list(); window.scrollTo(0, 0);
+      } else if (x) { delete store.recs[x.dataset.del]; persist(); list(); }
+    });
+    purge();
+    if (store.cur && store.recs[store.cur]) apply(store.recs[store.cur].d);
+    persist(); list();
+  })();
 })();
