@@ -19,7 +19,7 @@
         [0, 1, 2].forEach(function (s) { h += '<button type="button" class="apbtn" data-r="' + r[0] + '" data-s="' + s + '">' + s + "</button>"; });
         h += "</span></div>";
       });
-      h += "</details>";
+      h += '<div class="aprow aptotrow"><b>ציון</b><span class="aptv big">—</span></div></details>';
     });
     box.innerHTML = h;
     box.addEventListener("click", function (e) {
@@ -32,6 +32,7 @@
       const d = b.closest("details"), sel = d.querySelectorAll(".apbtn.sel");
       let t = 0; sel.forEach(function (x) { t += +x.dataset.s; });
       d.querySelector(".aptot").textContent = sel.length === 5 ? "(ציון " + t + ")" : "";
+      d.querySelector(".aptv").textContent = sel.length === 5 ? t : "—";
     });
     let start = null, tick = null, fired = {}, ctx = null;
     const clock = $("pr-clock"), btn = $("pr-clockbtn"), msg = $("pr-beep");
@@ -59,7 +60,6 @@
     }
     btn.addEventListener("click", function () {
       if (tick) {
-        if (Math.floor((Date.now() - start) / 1000) < 600 && !confirm("לעצור את הטיימר לפני 10 דקות?")) return;
         stop(); return;
       }
       try { ctx = ctx || new (window.AudioContext || window.webkitAudioContext)(); if (ctx.state === "suspended") ctx.resume(); } catch (e) {}

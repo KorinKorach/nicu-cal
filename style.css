@@ -183,3 +183,4 @@ body.babyflow .clrhome{display:block}
 .prdrug .card{margin:2px 0 8px;line-height:1.7}
 .prres .card b{display:inline}
 #pr-depth b{display:inline}
+.aptotrow{border-top:1px solid var(--line);margin-top:4px;padding-top:8px}.aptotrow b{display:inline}
