@@ -4,7 +4,7 @@
     {
       title: "הכנת עמדה לקבלה",
       items: [
-        "אינקובטור פתוח עם חימום (מוגדר על סרבו / PRE)",
+        "אינקובטור פתוח עם חימום (מוגדר על סרבו / <bdi dir=ltr>PRE</bdi>)",
         "כבל לסרבו מותאם לאינקובטור",
         "מדבקות למוניטור",
         "סנסור סטורציה (כחול או אפור - תלוי בסוג הכבל)",
@@ -34,7 +34,7 @@
         "מזרק 3 מ\"ל",
         "מזרק 1 מ\"ל",
         "מחט ירוקה",
-        "שקופיות לקיבוע (Tegaderm) × 2"
+        "שקופיות לקיבוע (<bdi dir=ltr>Tegaderm</bdi>) × 2"
       ],
       sterile: true,
       img: "equipment/iv.jpg",
@@ -45,7 +45,7 @@
       items: [
         "כפפות סטריליות",
         "גזות סטריליות עם תמיסת חיטוי (אלכוספט)",
-        "בקבוקון תרבית דם (BACTEC)",
+        "בקבוקון תרבית דם (<bdi dir=ltr>BACTEC</bdi>)",
         "מחט ירוקה × 2",
         "מזרק 3 מ\"ל",
         "מזרק לגזים",
@@ -75,7 +75,7 @@
       title: "הכנסת זונדה",
       items: [
         "זונדה (צינור הזנה)",
-        "דבק משי או שקופית לקיבוע (Tegaderm)",
+        "דבק משי או שקופית לקיבוע (<bdi dir=ltr>Tegaderm</bdi>)",
         "כפפות"
       ],
       depthCalc: true,
@@ -145,7 +145,9 @@
       var c = document.createElement("input");
       c.type = "checkbox";
       l.appendChild(c);
-      l.appendChild(document.createTextNode(" " + t));
+      var sp = document.createElement("span");
+      sp.innerHTML = " " + t;
+      l.appendChild(sp);
       ul.appendChild(l);
     });
     out.appendChild(ul);

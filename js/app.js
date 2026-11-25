@@ -69,7 +69,7 @@
     if (ga.error) { out.innerHTML = err(ga.error); return; }
     const r = NT.correctedAge(ga.w, ga.d, h);
     if (r.error) { out.innerHTML = err(r.error); return; }
-    let html = '<div class="card"><b>גיל הריון מצטבר (PMA)</b><span class="big">' + wd(r.pma) + "</span></div>";
+    let html = '<div class="card"><b>גיל הריון מצטבר (<bdi dir=ltr>PMA</bdi>)</b><span class="big">' + wd(r.pma) + "</span></div>";
     html += '<div class="card"><b>גיל כרונולוגי</b>' + r.ageWholeDays + " ימים שלמים</div>";
     if (r.premature) {
       html += '<div class="card"><b>גיל מתוקן (ביחס ל-40 שבועות)</b>' +
@@ -116,13 +116,13 @@
     if (ga.error) { out.innerHTML = err(ga.error); return; }
     const r = NT.fentonSize(sex, ga.w, ga.d, g);
     if (r.error) { out.innerHTML = err(r.error); return; }
-    const T = { SGA: ["bad", "קטן לגיל ההריון (SGA)"], AGA: ["ok", "גודל תקין לגיל ההריון (AGA)"], LGA: ["mid", "גדול לגיל ההריון (LGA)"] }[r.cls];
+    const T = { SGA: ["bad", "קטן לגיל ההריון (<bdi dir=ltr>SGA</bdi>)"], AGA: ["ok", "גודל תקין לגיל ההריון (<bdi dir=ltr>AGA</bdi>)"], LGA: ["mid", "גדול לגיל ההריון (<bdi dir=ltr>LGA</bdi>)"] }[r.cls];
     const pct = r.percentile < 0.1 ? "פחות מ-0.1" : r.percentile > 99.9 ? "מעל 99.9" : r.percentile.toFixed(1);
     const zp = (z) => clamp01((z + 3) / 6);
     const sgGauge = gaugeHtml([[zp(-1.2816), "#DC2626"], [zp(1.2816), "#16A34A"], [1, "#D97706"]], zp(r.z), [[zp(-1.2816), "10"], [zp(1.2816), "90"]]);
     let html = '<div class="card ' + T[0] + '"><b>' + T[1] + '</b>' + sgGauge + 'אחוזון: <span class="big">' + pct + '</span><br>Z-score: <span class="big">' + r.z.toFixed(2) + "</span></div>";
     html += '<div class="card">למין ולשבוע הזה:<br>אחוזון 10: ' + (r.p10 / 1000).toFixed(2) + ' ק"ג<br>חציון: ' + (r.median / 1000).toFixed(2) + ' ק"ג<br>אחוזון 90: ' + (r.p90 / 1000).toFixed(2) + ' ק"ג</div>';
-    if (r.beyond3) html += '<p class="warn">Z-score מעל ‎±3: הערך מקורב. בכלי המקורי נעשה תיקון נוסף בקצוות.</p>';
+    if (r.beyond3) html += '<p class="warn"><bdi dir=ltr>Z-score</bdi> מעל ‎±3: הערך מקורב. בכלי המקורי נעשה תיקון נוסף בקצוות.</p>';
     out.innerHTML = html;
   }
   ["sg-sex", "sg-ga", "sg-g"].forEach((i) => $(i).addEventListener("input", renderSga));
@@ -160,7 +160,7 @@
   }
   function plateauNote(r, h) {
     if (r.photoFrom === undefined || !(h >= 0)) return "";
-    if (r.pma) return h >= r.photoFrom ? '<p class="plateau"><b class="ptitle">הסף בפלאטו</b>בפגים, על פי Stanford, הסף מגיע לפלאטו כשגיל ההריון המצטבר הוא 35 שבועות. במקרה זה, הסף קבוע החל מגיל ' + r.photoFrom + " שעות ואינו עולה עוד (להמשך, ניתן להסתמך על הכלי AAP 2022)</p>" : "";
+    if (r.pma) return h >= r.photoFrom ? '<p class="plateau"><b class="ptitle">הסף בפלאטו</b>בפגים, על פי <bdi dir=ltr>Stanford</bdi>, הסף מגיע לפלאטו כשגיל ההריון המצטבר הוא 35 שבועות. במקרה זה, הסף קבוע החל מגיל ' + r.photoFrom + " שעות ואינו עולה עוד (להמשך, ניתן להסתמך על הכלי <bdi dir=ltr>AAP 2022</bdi>)</p>" : "";
     const n = [];
     if (h >= r.photoFrom) n.push("סף הפוטותרפיה: קבוע מגיל " + r.photoFrom + " שעות ואינו עולה עוד");
     if (h >= r.exchFrom) n.push("סף חילוף הדם: קבוע מגיל " + r.exchFrom + " שעות ואינו עולה עוד");
@@ -191,11 +191,11 @@
     if (ga.w >= 35) {
       const r = NT.biliAAP(ga.w, h, rf);
       if (r.error) { out.innerHTML = err(r.error); return; }
-      html = biliCard("AAP 2022 (35 שבועות ומעלה)", r, v, h);
+      html = biliCard("<bdi dir=ltr>AAP 2022</bdi> (35 שבועות ומעלה)", r, v, h);
     } else {
       const r = NT.biliPreterm(ga.w, ga.d, h, rf);
       if (r.error) { out.innerHTML = err(r.error); return; }
-      html = biliCard("Stanford Premie BiliRecs (פגים), גיל מצטבר " + wd(r.pma), r, v, h);
+      html = biliCard("<bdi dir=ltr>Stanford Premie BiliRecs</bdi> (פגים), גיל מצטבר " + wd(r.pma), r, v, h);
       r.warnings.forEach((x) => (html += '<p class="warn">' + x + "</p>"));
     }
     out.innerHTML = html;
@@ -219,7 +219,7 @@
     if (r.error) { out.innerHTML = err(r.error); return; }
     $("pbili-curves").href = "curves.html#" + r.week;
     r.nice = true;
-    let html = biliCard("עקומות NICE, שבוע " + r.week, r, v, h);
+    let html = biliCard("עקומות <bdi dir=ltr>NICE</bdi>, שבוע " + r.week, r, v, h);
     if (r.beyond) html += '<p class="warn">העקומות מגיעות עד גיל 14 ימים.</p>';
     out.innerHTML = html;
   }
@@ -303,7 +303,7 @@
     else h += '<li>מינון לתינוק: ' + n(mg(r.perKg)) + " × " + n(mg(r.kg)) + " = " + ans(mg(r.dose), MG) + "</li>";
     if (drug === "gen" && r.mode === "pure") {
       if (!r.manual) h += '<li>מוסיפים 3 מ"ג למאריך (1 מ"ל): ' + n(mg(r.dose)) + " + " + n(3) + " = " + ans(mg(r.withExt), MG) + "</li>";
-      h += "<li>שואבים תרופה טהורה (PURE): " + n(mg(r.withExt)) + " ÷ " + n(3) + " = " + ans(ml(r.draw), ML) + "</li>";
+      h += "<li>שואבים תרופה טהורה (<bdi dir=ltr>PURE</bdi>): " + n(mg(r.withExt)) + " ÷ " + n(3) + " = " + ans(ml(r.draw), ML) + "</li>";
       if (r.manual) h += "<li>נותנים לתינוק: (" + n(mg(r.withExt)) + " − " + n(3) + ") ÷ " + n(3) + " = " + ans(ml(r.give), ML) + "</li>";
       else h += "<li>נותנים לתינוק: " + n(mg(r.dose)) + " ÷ " + n(3) + " = " + ans(ml(r.give), ML) + "</li>";
     } else {
@@ -356,7 +356,7 @@
     h += '<div class="rrow manrow"><label for="dr-manual">מינון עם מאריך לפי הוראה רפואית</label><span class="manin"><input id="dr-manual" type="text" inputmode="decimal" autocomplete="off" value="' + manualWE + '"> מ"ג</span></div>';
     if (manErr) h += '<p class="err">' + manErr + "</p>";
     h += row(r.manual ? "שואבים מהתרופה (לפי ההוראה)" : "שואבים מהתרופה", ml(r.draw) + ' מ"ל');
-    h += row(drug === "caf" ? "משלימים בגלוקוז 5%" : "משלימים בסליין", pure ? "ללא סליין (PURE)" : ml(r.saline) + ' מ"ל');
+    h += row(drug === "caf" ? "משלימים בגלוקוז 5%" : "משלימים בסליין", pure ? "ללא סליין (<bdi dir=ltr>PURE</bdi>)" : ml(r.saline) + ' מ"ל');
     if (pure) h += row("נותנים לתינוק", ml(r.give) + ' מ"ל');
     h += '<div class="calcrow"><button type="button" class="calcbtn" id="dr-toggle" aria-expanded="' + showSteps + '"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M8 15h2M12 15h2M8 18h2M12 18h4"/></svg><span>' + (showSteps ? "הסתר את החישוב" : "הצג את החישוב") + '</span></button><button type="button" class="calcbtn" id="dr-calc-open" aria-label="מחשבון"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"/></svg><span>מחשבון</span></button></div>';
     h += '<div id="dr-steps"' + (showSteps ? "" : " hidden") + ">" + stepsHtml(drug, r) + "</div></div>";
