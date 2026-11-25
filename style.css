@@ -193,3 +193,4 @@ body.babyflow .clrhome{display:block}
 .prrec .nowbtn{margin:0}
 .prrec [data-open]{flex:1;text-align:start}
 .prprevnote{text-align:center}
+.prcur{text-align:center;margin:16px 0 4px;padding-top:12px;border-top:1px solid var(--line);font-size:17px;color:#15386B}
