@@ -65,7 +65,7 @@
     const pma = days + Math.floor(ageHours / 24);
     if (pma < 27 * 7) return { error: "הכלי מיועד לגיל מצטבר 27 שבועות ומעלה" };
     const warnings = [];
-    if (ageHours < 48) warnings.push("הכלי לא מיועד לתינוקות מתחת ל-48 שעות");
+    if (ageHours < 48) warnings.push("הכלי לא מיועד ליילודים מתחת ל-48 שעות");
     // הסף מפסיק לעלות כשגיל ההריון המצטבר מגיע ל-35 שבועות (סוף טווח הכלי של Stanford)
     const from = Math.max(0, (35 * 7 - days) * 24);
     return {

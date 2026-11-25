@@ -20,7 +20,7 @@
   <div class="tiles">
     <button class="tile alt wide" data-tab="baby">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
-      <span>הזנת פרטי תינוק לחישובים מרובים</span></button>
+      <span>הזנת פרטי יילוד לחישובים מרובים</span></button>
     <button class="tile" data-tab="age">
       <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>
       <span>גיל מתוקן</span></button>
@@ -57,7 +57,7 @@
 <section id="age" class="panel">
   <h2>גיל מתוקן וגיל הריון מצטבר</h2>
   <label>שבוע לידה (שבוע ויום) <input id="age-ga" class="ga" type="text" inputmode="decimal" placeholder="36+3 או 36.3" autocomplete="off"></label>
-  <label>גיל התינוק בשעות <input id="age-h" type="number" inputmode="numeric" min="0"></label>
+  <label>גיל היילוד בשעות <input id="age-h" type="number" inputmode="numeric" min="0"></label>
   <details class="dt"><summary>חישוב הגיל לפי תאריך ושעה</summary>
     <label>תאריך ושעת לידה <input id="age-birth" type="datetime-local"></label>
     <label><span class="lblrow">תאריך ושעה רצויים<button type="button" class="nowbtn" data-now="age-until">עכשיו</button></span><input id="age-until" type="datetime-local"></label>
@@ -109,7 +109,7 @@
 <section id="bili" class="panel">
   <h2>צהבת <u>ביילודים</u> (שבוע 35 ומעלה)</h2>
   <label>שבוע לידה (שבוע ויום) <input id="bili-ga" class="ga" type="text" inputmode="decimal" placeholder="36+3 או 36.3" autocomplete="off"></label>
-  <label>גיל התינוק בשעות <input id="bili-h" type="number" inputmode="numeric" min="0"></label>
+  <label>גיל היילוד בשעות <input id="bili-h" type="number" inputmode="numeric" min="0"></label>
   <div id="bili-prewarn"></div>
   <details class="dt"><summary>חישוב הגיל לפי תאריך ושעה</summary>
     <label>תאריך ושעת לידה <input id="bili-birth" type="datetime-local"></label>
@@ -132,7 +132,7 @@
 <section id="pbili" class="panel">
   <h2>צהבת <u>בפגים</u>: שבוע 24 עד 34</h2>
   <label>שבוע לידה (שבוע ויום) <input id="pbili-ga" class="ga" type="text" inputmode="decimal" placeholder="30+3 או 30.3" autocomplete="off"></label>
-  <label>גיל התינוק בשעות <input id="pbili-h" type="number" inputmode="numeric" min="0"></label>
+  <label>גיל היילוד בשעות <input id="pbili-h" type="number" inputmode="numeric" min="0"></label>
   <details class="dt"><summary>חישוב הגיל לפי תאריך ושעה</summary>
     <label>תאריך ושעת לידה <input id="pbili-birth" type="datetime-local"></label>
     <label><span class="lblrow">תאריך ושעה רצויים<button type="button" class="nowbtn" data-now="pbili-until">עכשיו</button></span><input id="pbili-until" type="datetime-local"></label>
@@ -159,7 +159,7 @@
     <option value="gbs2">ספציפית ל-<bdi dir="ltr">GBS</bdi> (פניצילין, אמפיצילין או צפאזולין), 2 שעות ומעלה לפני הלידה</option>
     <option value="none">אין, או כל אנטיביוטיקה פחות מ-2 שעות לפני הלידה</option></select></label>
   <div id="sp-out" class="out"></div>
-  <details><summary>איך מסווגים את מצב התינוק?</summary>
+  <details><summary>איך מסווגים את מצב היילוד?</summary>
     <p><b>מחלה קלינית:</b> צורך מתמשך ב-<bdi dir="ltr">NCPAP/HFNC</bdi>/הנשמה מחוץ לחדר לידה; חוסר יציבות המודינמית הדורש תרופות וזואקטיביות; אנצפלופתיה או דיכוי סביב הלידה; פרכוס; אפגר בדקה 5 מתחת ל-5; צורך בחמצן מעל שעתיים (מחוץ לחדר לידה) לשמירת סטורציה מעל 90%.</p>
     <p><b>גבולי:</b> חריגה פיזיולוגית מתמשכת מעל 4 שעות, או שתי חריגות או יותר שנמשכות מעל 2 שעות: דופק מעל 160, נשימות מעל 60, חום מעל 100.4°<bdi dir="ltr">F</bdi> או מתחת ל-97.5°<bdi dir="ltr">F</bdi>, מצוקה נשימתית (נחירות, פתיחת נחיריים, משיכות) בלי צורך בחמצן. החריגה יכולה להיות לסירוגין.</p>
     <p><b>תקין:</b> אין חריגות פיזיולוגיות מתמשכות.</p></details>
@@ -186,7 +186,7 @@
     <p><b>צפוטקסים (קלפורן)</b><br>
 מינון כמו אמפיצילין, 50 מ"ג/ק"ג למנה, לפי הסטנדרט במחלקה. הכנת הבקבוקון לפי עלון הרופא (<bdi dir="ltr">Cefotaxime Medo</bdi> 1 גר'): בקבוקון 1000 מ"ג מומס ב-4 מ"ל מים להזרקה, נפח סופי כ-4.5 מ"ל.</p>
     <p><b>גנטמיצין</b><br>
-מינון לפי שבוע לידה, לתינוק בגיל 0 עד 7 ימים בלבד.<br>
+מינון לפי שבוע לידה, ליילוד בגיל 0 עד 7 ימים בלבד.<br>
 מינון לפי שבוע לידה:<br>
 עד שבוע 29: 5 מ"ג/ק"ג;<br>
 30 עד 34+6: 4.5 מ"ג/ק"ג;<br>
@@ -194,7 +194,7 @@
 התרופה מגיעה מוכנה בריכוז 3 מ"ג למ"ל. אם המינון ללא מאריך הוא 12 מ"ג ומעלה (כלומר 4 מ"ל תרופה ומעלה), אין צורך בהשלמה בסליין (<bdi dir="ltr">PURE</bdi>), אלא מוסיפים 3 מ"ג (1 מ"ל) של תרופה למאריך.</p>
     <p><b>קפאין ציטרט</b><br>
 אמפולה <bdi dir="ltr">Citrate de Caféine Cooper</bdi>, 25 מ"ג למ"ל של <bdi dir="ltr">caffeine citrate</bdi> (50 מ"ג ציטרט ב-2 מ"ל, שהם 25 מ"ג <bdi dir="ltr">caffeine base</bdi>, לפי תווית האמפולה; <a href="https://base-donnees-publique.medicaments.gouv.fr/medicament/65973294/extrait" target="_blank" rel="noopener">העלון הצרפתי הרשמי</a>). המינון (מ"ג לק"ג למנה) מוזן ידנית לפי ההוראה הרפואית, כי יש כמה מינונים. לפי נוהל המחלקה: העמסה תמיד 20 מ"ג לק"ג למנה; אחזקה לפי מקרה, בדרך כלל 10 או 15 מ"ג לק"ג. שואבים את כמות התרופה בנפח שחושב ומשלימים ל-5 מ"ל בגלוקוז 5%.</p>
-    <p>חישוב המאריך (לפי צורת העבודה במחלקה): המאריך שווה 1 מ"ל. החומר שבמאריך לא ניתן לתינוק, ולכן נוסף לחישוב הכולל של המינון.<br>הנפחים מוצגים בחיתוך לשתי ספרות אחרי הנקודה (לא בעיגול).</p></details>
+    <p>חישוב המאריך (לפי צורת העבודה במחלקה): המאריך שווה 1 מ"ל. החומר שבמאריך לא ניתן ליילוד, ולכן נוסף לחישוב הכולל של המינון.<br>הנפחים מוצגים בחיתוך לשתי ספרות אחרי הנקודה (לא בעיגול).</p></details>
 </section>
 <section id="preemie" class="panel">
   <h2>קבלת פג ליחידה</h2>
@@ -329,7 +329,7 @@
   <div id="eq-out"></div>
 </section>
 <section id="baby" class="panel">
-  <h2>הזנת פרטי תינוק לחישובים מרובים</h2>
+  <h2>הזנת פרטי יילוד לחישובים מרובים</h2>
   <p class="keepnote">מזינים כאן את הנתונים פעם אחת ואז ניתן לעבור לכל מחשבון רצוי והמספרים יופיעו שם.<br>אם תרצו לשנות פרטים- לחצו על "ניקוי" בסוף הדף או רעננו.</p>
   <label>מין <select id="baby-sex"><option value="">בחרו…</option><option value="m">זכר</option><option value="f">נקבה</option></select></label>
   <label>תאריך ושעת לידה <input id="baby-birth" type="datetime-local"></label>

@@ -21,14 +21,14 @@
   // פתיחה ישירה ללשונית לפי כתובת (למשל index.html#pbili)
   const hashTab = location.hash.slice(1);
   if (hashTab && document.getElementById(hashTab) && document.getElementById(hashTab).classList.contains("panel")) show(hashTab);
-  // בחירת מחשבון מתוך פרטי התינוק: משכפל את אריחי הבית
+  // בחירת מחשבון מתוך פרטי היילוד: משכפל את אריחי הבית
   let babyFlow = false;
   document.querySelectorAll("#home .tile:not(.alt):not(.nopick)").forEach(function (t) {
     const c = t.cloneNode(true);
     c.className = "chip";
     $("pick-grid").appendChild(c);
   });
-  // חץ חזרה בראש כל מחשבון: לדף הבית, או לפרטי התינוק אם הגענו משם
+  // חץ חזרה בראש כל מחשבון: לדף הבית, או לפרטי היילוד אם הגענו משם
   document.querySelectorAll(".panel:not(#home)").forEach(function (p) {
     const row = document.createElement("div");
     row.className = "toprow";
@@ -246,7 +246,7 @@
       const a2 = NT.sepsisAdvice(s[0], r[s[0]], r.atBirth);
       const cls = r[s[0]] >= 3 ? "bad" : r[s[0]] >= 1 ? "mid" : "ok";
       const gg = gaugeHtml([[lp(1), "#16A34A"], [lp(3), "#D97706"], [1, "#DC2626"]], lp(r[s[0]]), [[lp(1), "1"], [lp(3), "3"]]);
-      html += '<div class="card ' + cls + '"><b>מצב התינוק: ' + s[1] + '</b>סיכון: <span class="big">' + f2(r[s[0]]) + "</span> לאלף" + gg + ACT[a2.action] + "<br><small>" + VIT[a2.vitals] + "</small></div>";
+      html += '<div class="card ' + cls + '"><b>מצב היילוד: ' + s[1] + '</b>סיכון: <span class="big">' + f2(r[s[0]]) + "</span> לאלף" + gg + ACT[a2.action] + "<br><small>" + VIT[a2.vitals] + "</small></div>";
     });
     out.innerHTML = html;
   }
@@ -270,7 +270,7 @@
   }
   $("sp-ga").addEventListener("input", spGaWarn);
 
-  // ---------- פרטי תינוק לכל החישובים ----------
+  // ---------- פרטי יילוד לכל החישובים ----------
   const BABY_MAP = {
     "baby-ga": ["age-ga", "bili-ga", "pbili-ga", "sg-ga", "hc-ga", "sp-ga", "dr-ga", "pr-ga"],
     "baby-birth": ["age-birth", "bili-birth", "pbili-birth", "pku-birth"],
@@ -300,12 +300,12 @@
     const MG = 'מ"ג', ML = 'מ"ל';
     let h = '<ol class="steps">';
     if (r.manual) h += '<li>מינון עם מאריך לפי הוראה רפואית: <b>' + n(mg(r.withExt)) + " " + MG + "</b></li>";
-    else h += '<li>מינון לתינוק: ' + n(mg(r.perKg)) + " × " + n(mg(r.kg)) + " = " + ans(mg(r.dose), MG) + "</li>";
+    else h += '<li>מינון ליילוד: ' + n(mg(r.perKg)) + " × " + n(mg(r.kg)) + " = " + ans(mg(r.dose), MG) + "</li>";
     if (drug === "gen" && r.mode === "pure") {
       if (!r.manual) h += '<li>מוסיפים 3 מ"ג למאריך (1 מ"ל): ' + n(mg(r.dose)) + " + " + n(3) + " = " + ans(mg(r.withExt), MG) + "</li>";
       h += "<li>שואבים תרופה טהורה (<bdi dir=ltr>PURE</bdi>): " + n(mg(r.withExt)) + " ÷ " + n(3) + " = " + ans(ml(r.draw), ML) + "</li>";
-      if (r.manual) h += "<li>נותנים לתינוק: (" + n(mg(r.withExt)) + " − " + n(3) + ") ÷ " + n(3) + " = " + ans(ml(r.give), ML) + "</li>";
-      else h += "<li>נותנים לתינוק: " + n(mg(r.dose)) + " ÷ " + n(3) + " = " + ans(ml(r.give), ML) + "</li>";
+      if (r.manual) h += "<li>נותנים ליילוד: (" + n(mg(r.withExt)) + " − " + n(3) + ") ÷ " + n(3) + " = " + ans(ml(r.give), ML) + "</li>";
+      else h += "<li>נותנים ליילוד: " + n(mg(r.dose)) + " ÷ " + n(3) + " = " + ans(ml(r.give), ML) + "</li>";
     } else {
       if (!r.manual) h += "<li>מינון עם מאריך: " + n(mg(r.dose)) + " × " + n(5) + " ÷ " + n(4) + " = " + ans(mg(r.withExt), MG) + "</li>";
       if (drug === "amp") {
@@ -321,7 +321,7 @@
         h += '<li>שואבים תרופה (3 מ"ג למ"ל): ' + n(mg(r.withExt)) + " ÷ " + n(3) + " = " + ans(ml(r.draw), ML) + "</li>";
       }
       h += "<li>משלימים ב" + (drug === "caf" ? "גלוקוז 5%" : "סליין") + ": " + n(5) + " − " + n(ml(r.draw)) + " = " + ans(ml(r.saline), ML) + ' (סה"כ 5 מ"ל)</li>';
-      h += '<li>נותנים לתינוק: <b>4 מ"ל</b> (' + n(mg(r.dose)) + ' מ"ג)</li>';
+      h += '<li>נותנים ליילוד: <b>4 מ"ל</b> (' + n(mg(r.dose)) + ' מ"ג)</li>';
     }
     return h + "</ol>";
   }
@@ -358,7 +358,7 @@
     if (manErr) h += '<p class="err">' + manErr + "</p>";
     h += row(r.manual ? "שואבים מהתרופה (לפי ההוראה)" : "שואבים מהתרופה", ml(r.draw) + ' מ"ל');
     h += row(drug === "caf" ? "משלימים בגלוקוז 5%" : "משלימים בסליין", pure ? "ללא סליין (<bdi dir=ltr>PURE</bdi>)" : ml(r.saline) + ' מ"ל');
-    if (pure) h += row("נותנים לתינוק", ml(r.give) + ' מ"ל');
+    if (pure) h += row("נותנים ליילוד", ml(r.give) + ' מ"ל');
     h += '<div class="calcrow"><button type="button" class="calcbtn" id="dr-toggle" aria-expanded="' + showSteps + '"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M8 15h2M12 15h2M8 18h2M12 18h4"/></svg><span>' + (showSteps ? "הסתר את החישוב" : "הצג את החישוב") + '</span></button><button type="button" class="calcbtn" id="dr-calc-open" aria-label="מחשבון"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"/></svg><span>מחשבון</span></button></div>';
     h += '<div id="dr-steps"' + (showSteps ? "" : " hidden") + ">" + stepsHtml(drug, r) + "</div></div>";
     h += '<p class="warn" style="text-align:center">המחשבון נועד לוודא חישובים שנעשו באופן עצמאי ולא מחליף אותם. יש להשוות תמיד מול ההוראה הרפואית.</p>';
