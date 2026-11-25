@@ -350,7 +350,7 @@
     if (mv > 0) { const m = NT.applyManual(drug, r, mv); if (m.error) manErr = m.error; else r = m; }
     const pure = drug === "gen" && r.mode === "pure";
     const row = (k, v) => '<div class="rrow"><span>' + k + "</span><b>" + v + "</b></div>";
-    let h = '<div class="card"><b class="ctitle">' + ({ amp: "אמפיצילין", cef: "צפוטקסים (קלפורן)", gen: "גנטמיצין", caf: "קפאין" }[drug]) + " – משקל " + mg(r.kg) + ' ק"ג</b>';
+    let h = '<div class="card"><b class="ctitle">' + ({ amp: "אמפיצילין", cef: "צפוטקסים (קלפורן)", gen: "גנטמיצין", caf: "קפאין ציטרט" }[drug]) + " – משקל " + mg(r.kg) + ' ק"ג</b>';
     h += row("מינון ללא מאריך", mg(base.dose) + ' מ"ג');
     h += row("מינון עם מאריך", mg(base.withExt) + ' מ"ג');
     h += '<div class="rrow manrow"><label for="dr-manual">מינון עם מאריך לפי הוראה רפואית</label><span class="manin"><input id="dr-manual" type="text" inputmode="decimal" autocomplete="off" value="' + manualWE + '"> מ"ג</span></div>';
