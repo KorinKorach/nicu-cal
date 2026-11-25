@@ -105,8 +105,12 @@
     // אינטובציה: לפי הערכת המשקל
     const sizes = tubeSizes(estKg, gaOk);
     $("pr-tubeline").textContent = sizes ? "להכין " + sizes.length + " טובוסים בגדלים: " + sizes.join(", ") + (estKg ? " (לפי הערכת משקל)" : "") : "להכין 4 טובוסים בגדלים: 2, 2.5, 3, 3.5";
+    const nd = estKg ? (estKg * 2 + 6).toFixed(1) : "", od = estKg ? (estKg + 6).toFixed(1) : "";
     $("pr-depth").innerHTML = estKg
-      ? "עומק טובוס לאינטובציה דרך האף (לפי הערכת משקל): <b>" + (estKg * 2 + 6).toFixed(1) + "</b> <small>(משקל בק״ג × 2) + 6</small><br>עומק טובוס לאינטובציה דרך הפה (לפי הערכת משקל): <b>" + (estKg + 6).toFixed(1) + "</b> <small>משקל בק״ג + 6</small>"
+      ? "<div>עומק טובוס לאינטובציה דרך האף: <b>" + nd + "</b></div><div>עומק טובוס לאינטובציה דרך הפה: <b>" + od + "</b></div>" +
+        '<details class="prsteps" data-k="depth"' + (openSteps.depth ? " open" : "") + "><summary>הצג את החישוב</summary>" +
+        '<ol class="steps"><li>דרך האף: (משקל בק״ג × 2) + 6<br>(' + n(mg(estKg)) + " × " + n(2) + ") + " + n(6) + " = <b>" + n(nd) + "</b></li>" +
+        "<li>דרך הפה: משקל בק״ג + 6<br>" + n(mg(estKg)) + " + " + n(6) + " = <b>" + n(od) + "</b></li></ol></details>"
       : "";
     const trs = $("pr-tubes").querySelectorAll("tr");
     const row = estKg ? (estKg < 0.8 ? 0 : estKg <= 1.2 ? 1 : estKg <= 2.2 ? 2 : 3) : -1;
@@ -155,6 +159,7 @@
   ["pr-ga", "pr-w"].forEach((i) => $(i).addEventListener("input", render));
   document.querySelectorAll("#preemie [data-d]").forEach((c) => c.addEventListener("change", render));
   document.querySelectorAll(".prres").forEach((r) => r.addEventListener("toggle", function (e) { if (e.target.dataset.k) openSteps[e.target.dataset.k] = e.target.open; }, true));
+  $("pr-depth").addEventListener("toggle", function (e) { if (e.target.dataset.k) openSteps[e.target.dataset.k] = e.target.open; }, true);
   $("pr-calc-open").addEventListener("click", function () { $("calc").hidden = false; });
   $("pr-eqsel").addEventListener("change", function () {
     ["room", "vent", "int"].forEach((k) => ($("pr-eq-" + k).hidden = $("pr-eqsel").value !== k));
