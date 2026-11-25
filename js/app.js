@@ -188,7 +188,7 @@
     const rf = $("bili-rf").checked, vRaw = $("bili-v").value, v = vRaw === "" ? null : parseFloat(vRaw);
     const preWarn = ga && !ga.error && twoDigits("bili-ga") && ga.w < 35 ? '<p class="warn"><b>שימו לב: זו לשונית צהבת לשבוע 35 ומעלה.</b> לפגים (שבוע 24 עד 34) יש לעבור למחשבון "צהבת בפגים".<br><button type="button" class="nowbtn" id="bili-gopre" style="margin:8px 0 0">מעבר למחשבון צהבת בפגים</button></p>' : "";
     $("bili-prewarn").innerHTML = preWarn;
-    if (!ga || isNaN(h)) { out.textContent = ""; return; }
+    if (!ga || isNaN(h) || (!ga.error && !twoDigits("bili-ga"))) { out.textContent = ""; return; }
     if (ga.error) { out.innerHTML = err(ga.error); return; }
     let html = "";
     if (ga.w >= 35) {
@@ -217,7 +217,7 @@
     const out = $("pbili-out"), ga = parseGA($("pbili-ga").value), h = parseFloat($("pbili-h").value);
     const vRaw = $("pbili-v").value, v = vRaw === "" ? null : parseFloat(vRaw);
     $("pbili-prewarn").innerHTML = ga && !ga.error && twoDigits("pbili-ga") && ga.w >= 35 ? '<p class="warn"><b>שימו לב: זו לשונית צהבת לשבועות 24 עד 34.</b> לשבוע 35 ומעלה יש לעבור למחשבון "צהבת ביילודים".<br><button type="button" class="nowbtn" id="pbili-gobili" style="margin:8px 0 0">מעבר למחשבון צהבת ביילודים</button></p>' : ga && !ga.error && twoDigits("pbili-ga") && ga.w < 24 ? '<p class="warn"><b>שימו לב: זו לשונית צהבת לשבועות 24 עד 34.</b></p>' : "";
-    if (!ga || isNaN(h)) { out.textContent = ""; return; }
+    if (!ga || isNaN(h) || (!ga.error && !twoDigits("pbili-ga"))) { out.textContent = ""; return; }
     if (ga.error) { out.innerHTML = err(ga.error); return; }
     const r = NT.biliNICE(ga.w, h);
     if (r.error) { out.innerHTML = r.silent ? "" : err(r.error); return; }
