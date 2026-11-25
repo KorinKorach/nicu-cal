@@ -249,8 +249,7 @@
     function list() {
       purge();
       const ids = Object.keys(store.recs).filter((id) => id !== store.cur).sort((a, b) => store.recs[b].c - store.recs[a].c);
-      $("pr-prev").hidden = !ids.length;
-      $("pr-prevlist").innerHTML = ids.map(function (id) {
+            $("pr-prevlist").innerHTML = ids.map(function (id) {
         const r = store.recs[id], tm = new Date(r.c).toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit" });
         return '<div class="prrec"><button type="button" class="nowbtn" data-open="' + id + '"><bdi>' + (r.d.t[0] || "—") + "</bdi> · <bdi>" + (r.d.t[1] || "—") + '</bdi> ק"ג · <bdi>' + tm + '</bdi></button><button type="button" class="nowbtn" data-del="' + id + '" aria-label="מחיקה">✕</button></div>';
       }).join("");
