@@ -158,3 +158,21 @@ body.babyflow .clrhome{display:block}
 #eqzoom[hidden]{display:none !important}
 #eqzoom img{display:block;width:max(900px,100%);max-width:none;height:auto;margin:0}
 #eqzoomx{position:fixed;top:12px;right:12px;z-index:60;padding:10px 18px;border:0;border-radius:24px;background:#fff;color:#15386B;font-weight:600;font-size:17px;font-family:inherit;box-shadow:0 2px 8px rgba(0,0,0,.4);cursor:pointer}
+/* קבלת פג ליחידה */
+#preemie details.dt summary{font-size:16px}
+#preemie details details{border:0;padding:0;margin:4px 0}
+#preemie .eqi{padding:8px 0}
+#preemie ul.stdnote{margin:6px 0;padding-inline-start:20px;line-height:1.6}
+#preemie .eqhead{margin:14px 0 2px}
+#preemie tr.hit td{background:#E7F5EC;font-weight:700}
+#preemie .eqi.late{background:#FFF1E0;border-radius:8px;padding-inline:8px}
+#preemie .eqi span small{color:#51606B;font-size:13px}
+.prtimer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0}
+.prtimer .nowbtn{margin:0;padding:10px 22px;font-size:17px}
+.prbeep{margin:6px 0;padding:8px 10px;background:#FFF1E0;border:1px solid #E5C77A;border-radius:8px;font-weight:600}
+.aprow{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 0}
+.apbtns{display:flex;gap:6px}
+.apbtn{width:44px;height:40px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:18px;font-family:inherit;color:#15386B;cursor:pointer}
+.apbtn.sel{background:#15386B;color:#fff;border-color:#15386B}
+.aptot{color:var(--blue);font-weight:600}
+.prsteps{margin:0 0 6px;padding-inline-start:34px}

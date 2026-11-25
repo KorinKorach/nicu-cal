@@ -272,9 +272,9 @@
 
   // ---------- פרטי תינוק לכל החישובים ----------
   const BABY_MAP = {
-    "baby-ga": ["age-ga", "bili-ga", "pbili-ga", "sg-ga", "hc-ga", "sp-ga", "dr-ga"],
+    "baby-ga": ["age-ga", "bili-ga", "pbili-ga", "sg-ga", "hc-ga", "sp-ga", "dr-ga", "pr-ga"],
     "baby-birth": ["age-birth", "bili-birth", "pbili-birth", "pku-birth"],
-    "baby-w": ["sg-g", "dr-w"],
+    "baby-w": ["sg-g", "dr-w", "pr-w"],
     "baby-sex": ["sg-sex", "hc-sex"],
   };
   function babyPush(src) {
@@ -325,6 +325,7 @@
     }
     return h + "</ol>";
   }
+  NT.parseGA = parseGA; NT.stepsHtml = stepsHtml;
   function renderDrugs() {
     const out = $("dr-out"), drug = $("dr-drug").value, kgIn = parseFloat($("dr-w").value), g = Math.round(kgIn * 1000);
     $("dr-ga-row").hidden = drug !== "gen";
