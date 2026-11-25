@@ -83,8 +83,8 @@
   // רמת הרצפה (מגיל 3 ימים): חילוף = 10 × שבוע, אור = חילוף פחות 100. המרה למ"ג/ד"ל: חלוקה ב-17.
   NT.biliNICE = function (gaWeeks, ageHours) {
     const w = Math.floor(gaWeeks);
-    if (w < 24) return { error: "העקומות מיועדות לשבוע 24 ומעלה" };
-    if (w > 34) return { error: "מגיל 35 שבועות משתמשים בלשונית הצהבת הרגילה" };
+    if (w < 24) return { error: "out of range", silent: true };
+    if (w > 34) return { error: "out of range", silent: true };
     if (!(ageHours >= 0)) return { error: "יש להזין גיל בשעות" };
     const f = Math.min(ageHours, 72) / 72;
     const exchUm = 80 + (10 * w - 80) * f, photoUm = 40 + (10 * w - 100 - 40) * f;
