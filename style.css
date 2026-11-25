@@ -201,3 +201,10 @@ body.babyflow .clrhome{display:block}
 .tile.alt svg{stroke:#15386B}
 .tile.alt:active{background:#DCE9F7}
 .tile.alt small{font-weight:400}
+
+/* צמצום גובה: כל האריחים בלי גלילה */
+.tiles{gap:6px !important}
+.tile{min-height:72px;padding:6px 6px;gap:4px}
+.tile svg{width:28px;height:28px}
+.tile.wide{min-height:54px}
+.tile.alt{min-height:60px;margin-bottom:4px}
