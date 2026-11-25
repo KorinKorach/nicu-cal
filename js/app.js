@@ -186,7 +186,7 @@
   function renderBili() {
     const out = $("bili-out"), ga = parseGA($("bili-ga").value), h = parseFloat($("bili-h").value);
     const rf = $("bili-rf").checked, vRaw = $("bili-v").value, v = vRaw === "" ? null : parseFloat(vRaw);
-    const preWarn = ga && !ga.error && twoDigits("bili-ga") && ga.w < 35 ? '<p class="warn"><b>שימו לב: זו לשונית צהבת לשבוע 35 ומעלה.</b> לפגים (שבוע 24 עד 34) יש לעבור למחשבון "<a href="#" class="golink" id="bili-gopre">צהבת בפגים</a>".</p>' : "";
+    const preWarn = ga && !ga.error && twoDigits("bili-ga") && ga.w < 35 ? '<p class="warn"><b>שימו לב: זו לשונית צהבת לשבוע 35 ומעלה.</b> לפגים (שבועות 24 עד 34+6) יש לעבור למחשבון "<a href="#" class="golink" id="bili-gopre">צהבת בפגים</a>".</p>' : "";
     $("bili-prewarn").innerHTML = preWarn;
     if (!ga || isNaN(h) || (!ga.error && !twoDigits("bili-ga"))) { out.textContent = ""; return; }
     if (ga.error) { out.innerHTML = err(ga.error); return; }
