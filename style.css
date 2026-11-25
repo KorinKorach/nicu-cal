@@ -196,7 +196,8 @@ body.babyflow .clrhome{display:block}
 .prcur{text-align:center;margin:16px 0 4px;padding-top:12px;border-top:1px solid var(--line);font-size:17px;color:#15386B}
 .prcurnote{text-align:center;font-size:13px;margin:2px 0 8px}
 
-/* כפתור פרטי יילוד: בולט */
-.tile.alt{background:#15386B;border:2px solid #15386B;color:#fff;min-height:72px;font-size:17px;font-weight:700;margin-bottom:6px;box-shadow:0 2px 6px rgba(21,56,107,.28)}
-.tile.alt svg{stroke:#fff}
-.tile.alt:active{background:#0F2B54}
+/* כפתור פרטי יילוד: בולט במידה */
+.tile.alt{background:#EAF2FB;border:2px solid #15386B;color:#15386B;min-height:68px;font-size:16px;font-weight:700;margin-bottom:6px;box-shadow:none}
+.tile.alt svg{stroke:#15386B}
+.tile.alt:active{background:#DCE9F7}
+.tile.alt small{font-weight:400}
