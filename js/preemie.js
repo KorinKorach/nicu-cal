@@ -107,10 +107,10 @@
     $("pr-tubeline").textContent = sizes ? "להכין " + sizes.length + " טובוסים בגדלים: " + sizes.join(", ") + (estKg ? " (לפי הערכת משקל)" : "") : "להכין 4 טובוסים בגדלים: 2, 2.5, 3, 3.5";
     const nd = estKg ? (estKg * 2 + 6).toFixed(1) : "", od = estKg ? (estKg + 6).toFixed(1) : "";
     $("pr-depth").innerHTML = estKg
-      ? "<div>עומק טובוס לאינטובציה דרך האף: <b>" + nd + "</b></div><div>עומק טובוס לאינטובציה דרך הפה: <b>" + od + "</b></div>" +
+      ? "<div>עומק טובוס לאינטובציה דרך האף: <b>" + nd + "</b> ס\"מ</div><div>עומק טובוס לאינטובציה דרך הפה: <b>" + od + "</b> ס\"מ</div>" +
         '<details class="prsteps" data-k="depth"' + (openSteps.depth ? " open" : "") + "><summary>הצג את החישוב</summary>" +
-        '<ol class="steps"><li>דרך האף: (משקל בק״ג × 2) + 6<br>(' + n(mg(estKg)) + " × " + n(2) + ") + " + n(6) + " = <b>" + n(nd) + "</b></li>" +
-        "<li>דרך הפה: משקל בק״ג + 6<br>" + n(mg(estKg)) + " + " + n(6) + " = <b>" + n(od) + "</b></li></ol></details>"
+        '<ol class="steps"><li>דרך האף: (משקל בק״ג × 2) + 6<br>(' + n(mg(estKg)) + " × " + n(2) + ") + " + n(6) + " = <b>" + n(nd) + "</b> ס\"מ</li>" +
+        "<li>דרך הפה: משקל בק״ג + 6<br>" + n(mg(estKg)) + " + " + n(6) + " = <b>" + n(od) + "</b> ס\"מ</li></ol></details>"
       : "";
     const trs = $("pr-tubes").querySelectorAll("tr");
     const row = estKg ? (estKg < 0.8 ? 0 : estKg <= 1.2 ? 1 : estKg <= 2.2 ? 2 : 3) : -1;
