@@ -36,7 +36,7 @@
     });
     let base = 0, start = null, tick = null, fired = {}, ctx = null;
     const clock = $("pr-clock"), msg = $("pr-beep");
-    const bS = $("pr-c-start"), bP = $("pr-c-stop"), bR = $("pr-c-resume"), bX = $("pr-c-reset");
+    const bS = $("pr-c-start"), bP = $("pr-c-stop"), bX = $("pr-c-reset");
     const fmt = (s) => String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0");
     const secs = () => Math.floor((base + (start ? Date.now() - start : 0)) / 1000);
     function beep() {
@@ -50,7 +50,7 @@
     // מצבים: idle (אפס), run, paused
     function ui() {
       const st = tick ? "run" : base > 0 ? "paused" : "idle";
-      bS.disabled = st !== "idle"; bP.disabled = st !== "run"; bR.disabled = st !== "paused";
+      bS.disabled = st !== "idle"; bP.disabled = st === "idle"; bP.textContent = st === "paused" ? "המשך" : "עצור";
       bX.disabled = st === "idle";
     }
     function halt() { clearInterval(tick); tick = null; if (start) base += Date.now() - start; start = null; ui(); }
@@ -71,8 +71,7 @@
       start = Date.now(); tick = setInterval(step, 250); ui();
     }
     bS.addEventListener("click", function () { base = 0; fired = {}; msg.hidden = true; clock.textContent = "00:00"; run(); });
-    bR.addEventListener("click", run);
-    bP.addEventListener("click", function () { halt(); clock.textContent = fmt(secs()); });
+    bP.addEventListener("click", function () { if (tick) { halt(); clock.textContent = fmt(secs()); } else run(); });
     bX.addEventListener("click", function () { halt(); base = 0; fired = {}; msg.hidden = true; clock.textContent = "00:00"; ui(); });
     ui();
   })();
