@@ -362,7 +362,7 @@
     h += '<div id="dr-steps"' + (showSteps ? "" : " hidden") + ">" + stepsHtml(drug, r) + "</div></div>";
     if (drug === "gen") h += '<p class="warn">המינון מחושב לפי שבוע לידה, לתינוקות בגיל 0 עד 7 ימים בלבד.</p>';
     if (drug === "amp" || drug === "cef") h += '<p class="warn">מחושב לפי המינון הסטנדרטי: 50 מ"ג/ק"ג למנה.</p>';
-    h += '<p class="warn">המחשבון נועד לוודא חישובים שנעשו באופן עצמאי ולא מחליף אותם. יש להשוות תמיד מול ההוראה הרפואית.</p>';
+    h += '<p class="warn" style="text-align:center">המחשבון נועד לוודא חישובים שנעשו באופן עצמאי ולא מחליף אותם. יש להשוות תמיד מול ההוראה הרפואית.</p>';
     const hadFocus = document.activeElement && document.activeElement.id === "dr-manual";
     out.innerHTML = h;
     if (hadFocus) { const i = $("dr-manual"); i.focus(); try { i.setSelectionRange(i.value.length, i.value.length); } catch (e) {} }
