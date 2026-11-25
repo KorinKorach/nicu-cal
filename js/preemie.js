@@ -126,19 +126,19 @@
     D.sur = { lines: w ? ["מינון: <b>" + sur + "</b> " + ML] : [need],
       steps: w ? '<ol class="steps"><li>200 מ"ג/ק"ג ÷ 80 מ"ג/מ"ל</li><li>(' + n(mg(w)) + " × " + n(200) + ") ÷ " + n(80) + " = " + n(sur) + " " + ML + "</li></ol>" : "" };
     const amp = w ? NT.ampicillin(g) : null;
-    D.amp = amp && !amp.error ? { lines: [L1(mg(amp.dose), MG), L2(mg(amp.withExt), MG)], steps: NT.stepsHtml("amp", amp) } : { lines: [need], steps: "" };
+    D.amp = amp && !amp.error ? { lines: [L1(mg(amp.dose), MG), L2(mg(amp.withExt), MG), "תדירות מתן: לפגים 2 מנות ביממה."], steps: NT.stepsHtml("amp", amp) } : { lines: [need], steps: "" };
     const gen = w && gaOk ? NT.gentamicin(g, gaOk.w) : null;
     if (gen && !gen.error) {
-      const fr = gaOk.w <= 29 ? "פעם ב-48 שעות" : gaOk.w <= 34 ? "פעם ב-36 שעות" : "";
-      D.gen = { lines: [L1(mg(gen.dose), MG), gen.mode === "pure" ? "תרופה טהורה (<bdi dir=ltr>PURE</bdi>) עם מאריך: <b>" + mg(gen.withExt) + "</b> " + MG : L2(mg(gen.withExt), MG)].concat(fr ? [fr] : [], ["לתינוק בין 0 עד 7 ימים"]), steps: NT.stepsHtml("gen", gen) };
+      D.gen = { lines: [L1(mg(gen.dose), MG), gen.mode === "pure" ? "תרופה טהורה (<bdi dir=ltr>PURE</bdi>) עם מאריך: <b>" + mg(gen.withExt) + "</b> " + MG : L2(mg(gen.withExt), MG),
+        "תדירות מתן (בגיל 0 עד 7 ימים) לפי שבוע לידה:", "29 ומטה: פעם ב-48 שעות", "30 עד 34: פעם ב-36 שעות"], steps: NT.stepsHtml("gen", gen) };
     } else D.gen = { lines: [w ? "<em>יש להזין שבוע הריון</em>" : need], steps: "" };
     const f = w ? cut2(w) : 0;
     D.fen = { lines: w ? ["להכין <b>" + f.toFixed(2) + "</b> מיקרוגרם מהולים למתן בפוש איטי"] : [need],
       steps: w ? '<ol class="steps"><li>מינון: 1 מיקרוגרם/ק"ג × ' + n(mg(w)) + ' = <b>' + n(f.toFixed(2)) + ' מיקרוגרם</b></li><li>יש לשאוב 0.1 מ״ל של התרופה (שהם 5 מיקרוגרם), ולהשלים עד 1 מ״ל עם <bdi dir="ltr">NACL 0.9%</bdi></li><li>לאחר המיהול יהיו במזרק 5 מיקרוגרם ב-1 מ״ל</li><li>ולתת לפי המינון הנדרש למשקל (<b>' + n(f.toFixed(2)) + "</b> מיקרוגרם)</li></ol>" : "" };
     const caf = w ? NT.caffeine(g, 20) : null;
     D.caf = caf && !caf.error ? { lines: [L1(mg(caf.dose), MG), L2(mg(caf.withExt), MG, "גלוקוז 5%")], steps: NT.stepsHtml("caf", caf) } : { lines: [need], steps: "" };
-    D.caf2 = { lines: w ? ["מינון: <b>" + mg(10 * w) + "</b> " + MG] : [need],
-      steps: w ? '<ol class="steps"><li>10 מ"ג/ק"ג × ' + n(mg(w)) + " = <b>" + n(mg(10 * w)) + " " + MG + "</b></li></ol>" : "" };
+    const caf2 = w ? NT.caffeine(g, 10) : null;
+    D.caf2 = caf2 && !caf2.error ? { lines: [L1(mg(caf2.dose), MG), L2(mg(caf2.withExt), MG, "גלוקוז 5%")], steps: NT.stepsHtml("caf", caf2) } : { lines: [need], steps: "" };
     Object.keys(D).forEach(function (k) {
       const d = D[k], on = document.querySelector('#preemie [data-d="' + k + '"]').checked;
       $("pr-res-" + k).innerHTML = !on ? "" : '<div class="card">' + d.lines.map((l) => "<div>" + l + "</div>").join("") +
