@@ -178,3 +178,7 @@ body.babyflow .clrhome{display:block}
 .prsteps{margin:0 0 6px;padding-inline-start:34px}
 #preemie .preq details.dt{border:0;padding:0}
 #preemie .preq>details,#preemie .preq{margin:0}
+.prcalcrow{display:flex;justify-content:flex-end;margin:0 0 4px}
+.prcalcrow .calcbtn{margin-top:0;padding:8px 10px}
+.prdrug .card{margin:2px 0 8px;line-height:1.7}
+.prres .card b{display:inline}

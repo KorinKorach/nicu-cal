@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Nicu Cal</title>
-<link rel="stylesheet" href="style.css?v=1795323791">
+<link rel="stylesheet" href="style.css?v=1795614917">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -285,13 +285,13 @@
     <label class="chk eqi"><input type="checkbox"><span>מוניטור נייד וסנסור סטורציה מתאים</span></label></div>
   </details>
   <details class="dt"><summary>תרופות</summary>
-    <label class="chk eqi"><input type="checkbox" data-d="sur"><span>סורפקטנט</span></label>
-    <label class="chk eqi"><input type="checkbox" data-d="amp"><span>אמפיצילין</span></label>
-    <label class="chk eqi"><input type="checkbox" data-d="gen"><span>גארמיצין</span></label>
-    <label class="chk eqi"><input type="checkbox" data-d="fen"><span>פנטניל</span></label>
-    <label class="chk eqi"><input type="checkbox" data-d="caf"><span>קפאין בקבלה</span></label>
-    <label class="chk eqi"><input type="checkbox" data-d="caf2"><span>קפאין אחרי 24 שעות</span></label>
-    <div id="pr-drugout" class="out"></div>
+    <div class="prcalcrow"><button type="button" class="calcbtn" id="pr-calc-open" aria-label="מחשבון"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"/></svg></button></div>
+    <div class="prdrug"><label class="chk eqi"><input type="checkbox" data-d="sur"><span>סורפקטנט</span></label><div class="prres" id="pr-res-sur"></div></div>
+    <div class="prdrug"><label class="chk eqi"><input type="checkbox" data-d="amp"><span>אמפיצילין</span></label><div class="prres" id="pr-res-amp"></div></div>
+    <div class="prdrug"><label class="chk eqi"><input type="checkbox" data-d="gen"><span>גארמיצין</span></label><div class="prres" id="pr-res-gen"></div></div>
+    <div class="prdrug"><label class="chk eqi"><input type="checkbox" data-d="fen"><span>פנטניל</span></label><div class="prres" id="pr-res-fen"></div></div>
+    <div class="prdrug"><label class="chk eqi"><input type="checkbox" data-d="caf"><span>קפאין בקבלה</span></label><div class="prres" id="pr-res-caf"></div></div>
+    <div class="prdrug"><label class="chk eqi"><input type="checkbox" data-d="caf2"><span>קפאין אחרי 24 שעות</span></label><div class="prres" id="pr-res-caf2"></div></div>
   </details>
   <details class="dt"><summary>הזנה</summary>
     <p class="stdnote">הוראות להזנה על פי משקל הפג - המלצות ביממה הראשונה לחיים:</p>
@@ -352,16 +352,16 @@
 
 <footer>כלי עזר בלבד. ההוראה הרפואית היא הקובעת. הנתונים לא נשמרים ולא נשלחים.<br><span class="credit">עדכון אחרון: נובמבר 2026</span><br><br><span class="credit">נבנה על ידי קורין קורח, אחות מוסמכת, טיפול מיוחד ביילוד,<br>בעזרת <bdi dir="ltr">Claude Code</bdi></span></footer>
 
-<script src="js/age.js?v=202611251505"></script>
-<script src="js/pku.js?v=202611251505"></script>
-<script src="js/bili-aap-data.js?v=202611251505"></script>
-<script src="js/bili.js?v=202611251505"></script>
-<script src="js/sepsis.js?v=202611251505"></script>
-<script src="js/sga.js?v=202611251505"></script>
-<script src="js/hc.js?v=202611251505"></script>
-<script src="js/drugs.js?v=202611251505"></script>
-<script src="js/equip.js?v=202611251505"></script>
-<script src="js/app.js?v=202611251505"></script>
-<script src="js/preemie.js?v=202611251505"></script>
+<script src="js/age.js?v=1795614917"></script>
+<script src="js/pku.js?v=1795614917"></script>
+<script src="js/bili-aap-data.js?v=1795614917"></script>
+<script src="js/bili.js?v=1795614917"></script>
+<script src="js/sepsis.js?v=1795614917"></script>
+<script src="js/sga.js?v=1795614917"></script>
+<script src="js/hc.js?v=1795614917"></script>
+<script src="js/drugs.js?v=1795614917"></script>
+<script src="js/equip.js?v=1795614917"></script>
+<script src="js/app.js?v=1795614917"></script>
+<script src="js/preemie.js?v=1795614917"></script>
 </body>
 </html>

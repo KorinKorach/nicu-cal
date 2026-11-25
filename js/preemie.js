@@ -116,28 +116,30 @@
     const w = estKg, need = '<em>יש להזין משקל</em>';
     const g = Math.round((w || 0) * 1000);
     const D = {}; // תוצאה לכל תרופה: { name, lines:[html], steps }
-    D.sur = { name: "סורפקטנט", lines: w ? ["מינון <b>" + ml(cut2((200 * w) / 80)) + "</b> " + ML] : [need],
-      steps: w ? '<ol class="steps"><li>200 מ"ג/ק"ג ÷ 80 מ"ג/מ"ל</li><li>200 × ' + n(mg(w)) + " ÷ 80 = <b>" + n(ml(cut2((200 * w) / 80))) + " " + ML + "</b></li></ol>" : "" };
+    const L1 = (v, u) => "מינון ללא שטיפה: <b>" + v + "</b> " + u;
+    const L2 = (v, u, d) => "להכנה בתוך 5 " + ML + " של " + (d || "סליין") + ": <b>" + v + "</b> " + u;
+    const sur = w ? ml(cut2((200 * w) / 80)) : "";
+    D.sur = { lines: w ? ["מינון: <b>" + sur + "</b> " + ML] : [need],
+      steps: w ? '<ol class="steps"><li>200 מ"ג/ק"ג ÷ 80 מ"ג/מ"ל</li><li><bdi dir="ltr">(' + mg(w) + " × 200) ÷ 80 = " + sur + "</bdi> " + ML + "</li></ol>" : "" };
     const amp = w ? NT.ampicillin(g) : null;
-    D.amp = amp && !amp.error ? { name: "אמפיצילין", lines: ["מינון <b>" + mg(amp.dose) + "</b> " + MG, "להכנה בתוך 5 " + ML + " של סליין - <b>" + mg(amp.withExt) + "</b> " + MG], steps: NT.stepsHtml("amp", amp) } : { name: "אמפיצילין", lines: [need], steps: "" };
+    D.amp = amp && !amp.error ? { lines: [L1(mg(amp.dose), MG), L2(mg(amp.withExt), MG)], steps: NT.stepsHtml("amp", amp) } : { lines: [need], steps: "" };
     const gen = w && gaOk ? NT.gentamicin(g, gaOk.w) : null;
     if (gen && !gen.error) {
       const fr = gaOk.w <= 29 ? "פעם ב-48 שעות" : gaOk.w <= 34 ? "פעם ב-36 שעות" : "";
-      D.gen = { name: "גארמיצין", lines: ["מינון <b>" + mg(gen.dose) + "</b> " + MG, gen.mode === "pure" ? "תרופה טהורה (<bdi dir=ltr>PURE</bdi>) עם מאריך: <b>" + mg(gen.withExt) + "</b> " + MG : "להכנה בתוך 5 " + ML + " של סליין - <b>" + mg(gen.withExt) + "</b> " + MG].concat(fr ? [fr] : [], ["לתינוק בין 0 עד 7 ימים"]), steps: NT.stepsHtml("gen", gen) };
-    } else D.gen = { name: "גארמיצין", lines: [w ? "<em>יש להזין שבוע הריון</em>" : need], steps: "" };
+      D.gen = { lines: [L1(mg(gen.dose), MG), gen.mode === "pure" ? "תרופה טהורה (<bdi dir=ltr>PURE</bdi>) עם מאריך: <b>" + mg(gen.withExt) + "</b> " + MG : L2(mg(gen.withExt), MG)].concat(fr ? [fr] : [], ["לתינוק בין 0 עד 7 ימים"]), steps: NT.stepsHtml("gen", gen) };
+    } else D.gen = { lines: [w ? "<em>יש להזין שבוע הריון</em>" : need], steps: "" };
     const f = w ? cut2(w) : 0;
-    D.fen = { name: "פנטניל", lines: w ? ["להכין <b>" + f.toFixed(2) + "</b> מיקרוגרם מהולים למתן בפוש איטי"] : [need],
+    D.fen = { lines: w ? ["להכין <b>" + f.toFixed(2) + "</b> מיקרוגרם מהולים למתן בפוש איטי"] : [need],
       steps: w ? '<ol class="steps"><li>מינון: 1 מיקרוגרם/ק"ג × ' + n(mg(w)) + ' = <b>' + n(f.toFixed(2)) + ' מיקרוגרם</b></li><li>יש לשאוב 0.1 מ״ל של התרופה (שהם 5 מיקרוגרם), ולהשלים עד 1 מ״ל עם <bdi dir="ltr">NACL 0.9%</bdi></li><li>לאחר המיהול יהיו במזרק 5 מיקרוגרם ב-1 מ״ל</li><li>ולתת לפי המינון הנדרש למשקל (<b>' + n(f.toFixed(2)) + "</b> מיקרוגרם)</li></ol>" : "" };
     const caf = w ? NT.caffeine(g, 20) : null;
-    D.caf = caf && !caf.error ? { name: "קפאין בקבלה", lines: ["מינון <b>" + mg(caf.dose) + "</b> " + MG, "עם מאריך: <b>" + mg(caf.withExt) + "</b> " + MG], steps: NT.stepsHtml("caf", caf) } : { name: "קפאין בקבלה", lines: [need], steps: "" };
-    D.caf2 = { name: "קפאין אחרי 24 שעות", lines: w ? ["מינון <b>" + mg(10 * w) + "</b> " + MG] : [need],
+    D.caf = caf && !caf.error ? { lines: [L1(mg(caf.dose), MG), L2(mg(caf.withExt), MG, "גלוקוז 5%")], steps: NT.stepsHtml("caf", caf) } : { lines: [need], steps: "" };
+    D.caf2 = { lines: w ? ["מינון: <b>" + mg(10 * w) + "</b> " + MG] : [need],
       steps: w ? '<ol class="steps"><li>10 מ"ג/ק"ג × ' + n(mg(w)) + " = <b>" + n(mg(10 * w)) + " " + MG + "</b></li></ol>" : "" };
-    const chosen = [...document.querySelectorAll("#preemie [data-d]:checked")].map((c) => c.dataset.d);
-    $("pr-drugout").innerHTML = chosen.map(function (k) {
-      const d = D[k];
-      return '<div class="card"><b class="ctitle">' + d.name + "</b>" + d.lines.map((l) => "<div>" + l + "</div>").join("") +
+    Object.keys(D).forEach(function (k) {
+      const d = D[k], on = document.querySelector('#preemie [data-d="' + k + '"]').checked;
+      $("pr-res-" + k).innerHTML = !on ? "" : '<div class="card">' + d.lines.map((l) => "<div>" + l + "</div>").join("") +
         (d.steps ? '<details class="prsteps" data-k="' + k + '"' + (openSteps[k] ? " open" : "") + "><summary>הצג את החישוב</summary>" + d.steps + "</details>" : "") + "</div>";
-    }).join("");
+    });
     // הזנה
     const li = (t, a, b, u) => "<li>" + t + (w ? " (" + parseFloat((a * w).toFixed(2)) + "-" + parseFloat((b * w).toFixed(2)) + " " + u + ")" : "") + "</li>";
     $("pr-nut").innerHTML =
@@ -152,7 +154,8 @@
   }
   ["pr-ga", "pr-w"].forEach((i) => $(i).addEventListener("input", render));
   document.querySelectorAll("#preemie [data-d]").forEach((c) => c.addEventListener("change", render));
-  $("pr-drugout").addEventListener("toggle", function (e) { if (e.target.dataset.k) openSteps[e.target.dataset.k] = e.target.open; }, true);
+  document.querySelectorAll(".prres").forEach((r) => r.addEventListener("toggle", function (e) { if (e.target.dataset.k) openSteps[e.target.dataset.k] = e.target.open; }, true));
+  $("pr-calc-open").addEventListener("click", function () { $("calc").hidden = false; });
   $("pr-eqsel").addEventListener("change", function () {
     ["room", "vent", "int"].forEach((k) => ($("pr-eq-" + k).hidden = $("pr-eqsel").value !== k));
   });
