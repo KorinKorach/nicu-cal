@@ -208,3 +208,7 @@ body.babyflow .clrhome{display:block}
 .tile svg{width:28px;height:28px}
 .tile.wide{min-height:54px}
 .tile.alt{min-height:60px;margin-bottom:4px}
+
+/* התראות והערות קצרות: ממורכזות */
+.warn,.err{text-align:center}
+.golink{color:#15386B;font-weight:700;text-decoration:underline}
