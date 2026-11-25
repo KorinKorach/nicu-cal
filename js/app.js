@@ -360,8 +360,6 @@
     if (pure) h += row("נותנים לתינוק", ml(r.give) + ' מ"ל');
     h += '<div class="calcrow"><button type="button" class="calcbtn" id="dr-toggle" aria-expanded="' + showSteps + '"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M8 15h2M12 15h2M8 18h2M12 18h4"/></svg><span>' + (showSteps ? "הסתר את החישוב" : "הצג את החישוב") + '</span></button><button type="button" class="calcbtn" id="dr-calc-open" aria-label="מחשבון"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"/></svg><span>מחשבון</span></button></div>';
     h += '<div id="dr-steps"' + (showSteps ? "" : " hidden") + ">" + stepsHtml(drug, r) + "</div></div>";
-    if (drug === "gen") h += '<p class="warn">המינון מחושב לפי שבוע לידה, לתינוקות בגיל 0 עד 7 ימים בלבד.</p>';
-    if (drug === "amp" || drug === "cef") h += '<p class="warn">מחושב לפי המינון הסטנדרטי: 50 מ"ג/ק"ג למנה.</p>';
     h += '<p class="warn" style="text-align:center">המחשבון נועד לוודא חישובים שנעשו באופן עצמאי ולא מחליף אותם. יש להשוות תמיד מול ההוראה הרפואית.</p>';
     const hadFocus = document.activeElement && document.activeElement.id === "dr-manual";
     out.innerHTML = h;
