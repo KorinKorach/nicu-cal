@@ -314,10 +314,13 @@
       } else if (drug === "cef") {
         h += '<li>מדללים את הבקבוקון (1000 מ"ג) ב-4 מ"ל מים להזרקה: נפח סופי 4.5 מ"ל (1000 מ"ג ב-4.5 מ"ל)</li>';
         h += "<li>שואבים תרופה: " + n(mg(r.withExt)) + " × " + n(4.5) + " ÷ " + n(1000) + " = " + ans(ml(r.draw), ML) + "</li>";
+      } else if (drug === "caf") {
+        h += '<li>אמפולה: 25 מ"ג למ"ל</li>';
+        h += "<li>שואבים תרופה: " + n(mg(r.withExt)) + " ÷ " + n(25) + " = " + ans(ml(r.draw), ML) + "</li>";
       } else {
         h += '<li>שואבים תרופה (3 מ"ג למ"ל): ' + n(mg(r.withExt)) + " ÷ " + n(3) + " = " + ans(ml(r.draw), ML) + "</li>";
       }
-      h += "<li>משלימים בסליין: " + n(5) + " − " + n(ml(r.draw)) + " = " + ans(ml(r.saline), ML) + ' (סה"כ 5 מ"ל)</li>';
+      h += "<li>משלימים ב" + (drug === "caf" ? "גלוקוז 5%" : "סליין") + ": " + n(5) + " − " + n(ml(r.draw)) + " = " + ans(ml(r.saline), ML) + ' (סה"כ 5 מ"ל)</li>';
       h += '<li>נותנים לתינוק: <b>4 מ"ל</b> (' + n(mg(r.dose)) + ' מ"ג)</li>';
     }
     return h + "</ol>";
@@ -325,12 +328,17 @@
   function renderDrugs() {
     const out = $("dr-out"), drug = $("dr-drug").value, kgIn = parseFloat($("dr-w").value), g = Math.round(kgIn * 1000);
     $("dr-ga-row").hidden = drug !== "gen";
+    $("dr-dose-row").hidden = drug !== "caf";
     if (!drug || isNaN(g)) { out.textContent = ""; return; }
     if (kgIn > 20) { out.innerHTML = err("המשקל מוזן בקילוגרמים (למשל 3.3), לא בגרמים"); return; }
     let r;
     if (drug === "amp") r = NT.ampicillin(g);
     else if (drug === "cef") r = NT.cefotaxime(g);
-    else {
+    else if (drug === "caf") {
+      const pk = parseFloat($("dr-dose").value);
+      if (isNaN(pk)) { out.textContent = ""; return; }
+      r = NT.caffeine(g, pk);
+    } else {
       const ga = parseGA($("dr-ga").value);
       if (!ga) { out.textContent = ""; return; }
       if (ga.error) { out.innerHTML = err(ga.error); return; }
@@ -342,17 +350,18 @@
     if (mv > 0) { const m = NT.applyManual(drug, r, mv); if (m.error) manErr = m.error; else r = m; }
     const pure = drug === "gen" && r.mode === "pure";
     const row = (k, v) => '<div class="rrow"><span>' + k + "</span><b>" + v + "</b></div>";
-    let h = '<div class="card"><b class="ctitle">' + ({ amp: "אמפיצילין", cef: "צפוטקסים (קלפורן)", gen: "גנטמיצין" }[drug]) + " – משקל " + mg(r.kg) + ' ק"ג</b>';
+    let h = '<div class="card"><b class="ctitle">' + ({ amp: "אמפיצילין", cef: "צפוטקסים (קלפורן)", gen: "גנטמיצין", caf: "קפאין" }[drug]) + " – משקל " + mg(r.kg) + ' ק"ג</b>';
     h += row("מינון ללא מאריך", mg(base.dose) + ' מ"ג');
     h += row("מינון עם מאריך", mg(base.withExt) + ' מ"ג');
     h += '<div class="rrow manrow"><label for="dr-manual">מינון עם מאריך לפי הוראה רפואית</label><span class="manin"><input id="dr-manual" type="text" inputmode="decimal" autocomplete="off" value="' + manualWE + '"> מ"ג</span></div>';
     if (manErr) h += '<p class="err">' + manErr + "</p>";
     h += row(r.manual ? "שואבים מהתרופה (לפי ההוראה)" : "שואבים מהתרופה", ml(r.draw) + ' מ"ל');
-    h += row("משלימים בסליין", pure ? "ללא סליין (PURE)" : ml(r.saline) + ' מ"ל');
+    h += row(drug === "caf" ? "משלימים בגלוקוז 5%" : "משלימים בסליין", pure ? "ללא סליין (PURE)" : ml(r.saline) + ' מ"ל');
     if (pure) h += row("נותנים לתינוק", ml(r.give) + ' מ"ל');
     h += '<div class="calcrow"><button type="button" class="calcbtn" id="dr-toggle" aria-expanded="' + showSteps + '"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M8 15h2M12 15h2M8 18h2M12 18h4"/></svg><span>' + (showSteps ? "הסתר את החישוב" : "הצג את החישוב") + '</span></button><button type="button" class="calcbtn" id="dr-calc-open" aria-label="מחשבון"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"/></svg><span>מחשבון</span></button></div>';
     h += '<div id="dr-steps"' + (showSteps ? "" : " hidden") + ">" + stepsHtml(drug, r) + "</div></div>";
     if (drug === "gen") h += '<p class="warn">המינון מחושב לפי שבוע לידה, לתינוקות בגיל 0 עד 7 ימים בלבד.</p>';
+    if (drug === "caf") h += '<p class="warn">המינון (מ"ג/ק"ג) הוזן לפי ההוראה הרפואית. ההשלמה היא בגלוקוז 5%, לא בסליין.</p>';
     if (drug === "amp" || drug === "cef") h += '<p class="warn">מחושב לפי המינון הסטנדרטי: 50 מ"ג/ק"ג למנה.</p>';
     h += '<p class="warn">המחשבון נועד לוודא חישובים שנעשו באופן עצמאי ולא מחליף אותם. יש להשוות תמיד מול ההוראה הרפואית.</p>';
     const hadFocus = document.activeElement && document.activeElement.id === "dr-manual";
@@ -366,7 +375,7 @@
     if (e.target.closest("#dr-toggle")) { showSteps = !showSteps; renderDrugs(); }
     if (e.target.closest("#dr-calc-open")) { $("calc").hidden = false; }
   });
-  ["dr-drug", "dr-w", "dr-ga"].forEach((i) => $(i).addEventListener("input", function () { manualWE = ""; renderDrugs(); }));
+  ["dr-drug", "dr-w", "dr-ga", "dr-dose"].forEach((i) => $(i).addEventListener("input", function () { manualWE = ""; renderDrugs(); }));
 
   // ---------- מחשבון רגיל ----------
   (function () {
