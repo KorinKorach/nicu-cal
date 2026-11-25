@@ -216,7 +216,7 @@
   function renderPbili() {
     const out = $("pbili-out"), ga = parseGA($("pbili-ga").value), h = parseFloat($("pbili-h").value);
     const vRaw = $("pbili-v").value, v = vRaw === "" ? null : parseFloat(vRaw);
-    $("pbili-prewarn").innerHTML = ga && !ga.error && twoDigits("pbili-ga") && ga.w >= 35 ? '<p class="warn"><b>שימו לב: זו לשונית צהבת לשבועות 24 עד 34.</b> לשבוע 35 ומעלה יש לעבור למחשבון "צהבת ביילודים".</p>' : ga && !ga.error && twoDigits("pbili-ga") && ga.w < 24 ? '<p class="warn"><b>שימו לב: זו לשונית צהבת לשבועות 24 עד 34.</b></p>' : "";
+    $("pbili-prewarn").innerHTML = ga && !ga.error && twoDigits("pbili-ga") && ga.w >= 35 ? '<p class="warn"><b>שימו לב: זו לשונית צהבת לשבועות 24 עד 34.</b> לשבוע 35 ומעלה יש לעבור למחשבון "צהבת ביילודים".<br><button type="button" class="nowbtn" id="pbili-gobili" style="margin:8px 0 0">מעבר למחשבון צהבת ביילודים</button></p>' : ga && !ga.error && twoDigits("pbili-ga") && ga.w < 24 ? '<p class="warn"><b>שימו לב: זו לשונית צהבת לשבועות 24 עד 34.</b></p>' : "";
     if (!ga || isNaN(h)) { out.textContent = ""; return; }
     if (ga.error) { out.innerHTML = err(ga.error); return; }
     const r = NT.biliNICE(ga.w, h);
@@ -227,6 +227,13 @@
     if (r.beyond) html += '<p class="warn">העקומות מגיעות עד גיל 14 ימים.</p>';
     out.innerHTML = html;
   }
+  $("pbili-prewarn").addEventListener("click", function (e) {
+    if (e.target.closest("#pbili-gobili")) {
+      show("bili");
+      ["ga", "h", "v"].forEach(function (k) { $("bili-" + k).value = $("pbili-" + k).value; });
+      $("bili-ga").dispatchEvent(new Event("input", { bubbles: true }));
+    }
+  });
   ["pbili-ga", "pbili-h", "pbili-v"].forEach((i) => $(i).addEventListener("input", renderPbili));
 
   // ---------- זיהום ----------
