@@ -128,7 +128,7 @@
     const pct = r.percentile < 0.1 ? "פחות מ-0.1" : r.percentile > 99.9 ? "מעל 99.9" : r.percentile.toFixed(1);
     const zp = (z) => clamp01((z + 3) / 6);
     const sgGauge = gaugeHtml([[zp(-1.2816), "#DC2626"], [zp(1.2816), "#16A34A"], [1, "#D97706"]], zp(r.z), [[zp(-1.2816), "10"], [zp(1.2816), "90"]]);
-    let html = '<div class="card ' + T[0] + '"><b>משקל: ' + T[1] + '</b>' + sgGauge + 'אחוזון: <span class="big">' + pct + '</span><br>Z-score: <span class="big">' + r.z.toFixed(2) + "</span>" + rangeHtml('ק"ג', (r.p10 / 1000).toFixed(2), (r.median / 1000).toFixed(2), (r.p90 / 1000).toFixed(2)) + "</div>";
+    let html = '<div class="card ' + T[0] + '"><b>משקל: ' + T[1] + '</b>' + sgGauge + 'אחוזון: <span class="big">' + pct + '</span><br><bdi dir="ltr">Z-score</bdi>: <span class="zs"><bdi dir="ltr">' + r.z.toFixed(2) + "</bdi></span>" + rangeHtml('ק"ג', (r.p10 / 1000).toFixed(2), (r.median / 1000).toFixed(2), (r.p90 / 1000).toFixed(2)) + "</div>";
     if (r.beyond3) html += '<p class="warn"><bdi dir=ltr>Z-score</bdi> מעל ‎±3: הערך מקורב. בכלי המקורי נעשה תיקון נוסף בקצוות.</p>';
     out.innerHTML = html;
   }
@@ -146,7 +146,7 @@
     const pct = r.percentile < 0.1 ? "פחות מ-0.1" : r.percentile > 99.9 ? "מעל 99.9" : r.percentile.toFixed(1);
     const zp = (z) => clamp01((z + 3) / 6);
     const g = gaugeHtml([[zp(-1.2816), "#DC2626"], [zp(1.2816), "#16A34A"], [1, "#D97706"]], zp(r.z), [[zp(-1.2816), "10"], [zp(1.2816), "90"]]);
-    let html = '<div class="card ' + T[0] + '"><b>' + T[1] + '</b>' + g + 'אחוזון: <span class="big">' + pct + '</span><br>Z-score: <span class="big">' + r.z.toFixed(2) + "</span>" + rangeHtml('ס"מ', r.p10.toFixed(1), r.median.toFixed(1), r.p90.toFixed(1)) + "</div>";
+    let html = '<div class="card ' + T[0] + '"><b>' + T[1] + '</b>' + g + 'אחוזון: <span class="big">' + pct + '</span><br><bdi dir="ltr">Z-score</bdi>: <span class="zs"><bdi dir="ltr">' + r.z.toFixed(2) + "</bdi></span>" + rangeHtml('ס"מ', r.p10.toFixed(1), r.median.toFixed(1), r.p90.toFixed(1)) + "</div>";
     out.innerHTML = html;
   }
   ["sg-sex", "sg-ga", "hc-c"].forEach((i) => $(i).addEventListener("input", renderHc));
