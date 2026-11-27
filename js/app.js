@@ -132,7 +132,7 @@
 
   // ---------- אחוזון היקף ראש ----------
   function renderHc() {
-    const out = $("hc-out"), sex = $("hc-sex").value, ga = parseGA($("hc-ga").value), c = parseFloat($("hc-c").value);
+    const out = $("hc-out"), sex = $("sg-sex").value, ga = parseGA($("sg-ga").value), c = parseFloat($("hc-c").value);
     if (!sex || !ga || isNaN(c)) { out.textContent = ""; return; }
     if (c > 60) { out.innerHTML = err("היקף הראש מוזן בסנטימטרים (למשל 33.5)"); return; }
     if (ga.error) { out.innerHTML = err(ga.error); return; }
@@ -146,7 +146,7 @@
     html += '<div class="card">למין ולשבוע הזה:<br>אחוזון 10: ' + r.p10.toFixed(1) + ' ס"מ<br>חציון: ' + r.median.toFixed(1) + ' ס"מ<br>אחוזון 90: ' + r.p90.toFixed(1) + ' ס"מ</div>';
     out.innerHTML = html;
   }
-  ["hc-sex", "hc-ga", "hc-c"].forEach((i) => $(i).addEventListener("input", renderHc));
+  ["sg-sex", "sg-ga", "hc-c"].forEach((i) => $(i).addEventListener("input", renderHc));
 
   // ---------- צהבת ----------
   const num1 = (x) => (Math.round(x * 10) / 10).toString();
@@ -285,10 +285,10 @@
 
   // ---------- פרטי יילוד לכל החישובים ----------
   const BABY_MAP = {
-    "baby-ga": ["age-ga", "bili-ga", "pbili-ga", "sg-ga", "hc-ga", "sp-ga", "dr-ga", "pr-ga"],
+    "baby-ga": ["age-ga", "bili-ga", "pbili-ga", "sg-ga", "sp-ga", "dr-ga", "pr-ga"],
     "baby-birth": ["age-birth", "bili-birth", "pbili-birth", "pku-birth"],
     "baby-w": ["sg-g", "dr-w", "pr-w"],
-    "baby-sex": ["sg-sex", "hc-sex"],
+    "baby-sex": ["sg-sex"],
   };
   function babyPush(src) {
     const v = $(src).value;
