@@ -111,6 +111,11 @@
   }
   const clamp01 = (x) => Math.max(0, Math.min(1, x));
 
+  // טווח למין ולשבוע הזה: פס שלוש עמודות בתוך כרטיס התוצאה
+  function rangeHtml(unit, p10, med, p90) {
+    const c = (l, v) => '<div><small>' + l + "</small><b>" + v + "</b></div>";
+    return '<div class="range"><div class="rtitle">הטווח למין ולשבוע הזה (' + unit + ')</div><div class="rcols">' + c("אחוזון 10", p10) + c("חציון", med) + c("אחוזון 90", p90) + "</div></div>";
+  }
   // ---------- SGA / LGA ----------
   function renderSga() {
     const out = $("sg-out"), sex = $("sg-sex").value, ga = parseGA($("sg-ga").value), kgIn = parseFloat($("sg-g").value), g = kgIn * 1000;
@@ -123,8 +128,7 @@
     const pct = r.percentile < 0.1 ? "פחות מ-0.1" : r.percentile > 99.9 ? "מעל 99.9" : r.percentile.toFixed(1);
     const zp = (z) => clamp01((z + 3) / 6);
     const sgGauge = gaugeHtml([[zp(-1.2816), "#DC2626"], [zp(1.2816), "#16A34A"], [1, "#D97706"]], zp(r.z), [[zp(-1.2816), "10"], [zp(1.2816), "90"]]);
-    let html = '<div class="card ' + T[0] + '"><b>' + T[1] + '</b>' + sgGauge + 'אחוזון: <span class="big">' + pct + '</span><br>Z-score: <span class="big">' + r.z.toFixed(2) + "</span></div>";
-    html += '<div class="card">למין ולשבוע הזה:<br>אחוזון 10: ' + (r.p10 / 1000).toFixed(2) + ' ק"ג<br>חציון: ' + (r.median / 1000).toFixed(2) + ' ק"ג<br>אחוזון 90: ' + (r.p90 / 1000).toFixed(2) + ' ק"ג</div>';
+    let html = '<div class="card ' + T[0] + '"><b>משקל: ' + T[1] + '</b>' + sgGauge + 'אחוזון: <span class="big">' + pct + '</span><br>Z-score: <span class="big">' + r.z.toFixed(2) + "</span>" + rangeHtml('ק"ג', (r.p10 / 1000).toFixed(2), (r.median / 1000).toFixed(2), (r.p90 / 1000).toFixed(2)) + "</div>";
     if (r.beyond3) html += '<p class="warn"><bdi dir=ltr>Z-score</bdi> מעל ‎±3: הערך מקורב. בכלי המקורי נעשה תיקון נוסף בקצוות.</p>';
     out.innerHTML = html;
   }
@@ -142,8 +146,7 @@
     const pct = r.percentile < 0.1 ? "פחות מ-0.1" : r.percentile > 99.9 ? "מעל 99.9" : r.percentile.toFixed(1);
     const zp = (z) => clamp01((z + 3) / 6);
     const g = gaugeHtml([[zp(-1.2816), "#DC2626"], [zp(1.2816), "#16A34A"], [1, "#D97706"]], zp(r.z), [[zp(-1.2816), "10"], [zp(1.2816), "90"]]);
-    let html = '<div class="card ' + T[0] + '"><b>' + T[1] + '</b>' + g + 'אחוזון: <span class="big">' + pct + '</span><br>Z-score: <span class="big">' + r.z.toFixed(2) + "</span></div>";
-    html += '<div class="card">למין ולשבוע הזה:<br>אחוזון 10: ' + r.p10.toFixed(1) + ' ס"מ<br>חציון: ' + r.median.toFixed(1) + ' ס"מ<br>אחוזון 90: ' + r.p90.toFixed(1) + ' ס"מ</div>';
+    let html = '<div class="card ' + T[0] + '"><b>' + T[1] + '</b>' + g + 'אחוזון: <span class="big">' + pct + '</span><br>Z-score: <span class="big">' + r.z.toFixed(2) + "</span>" + rangeHtml('ס"מ', r.p10.toFixed(1), r.median.toFixed(1), r.p90.toFixed(1)) + "</div>";
     out.innerHTML = html;
   }
   ["sg-sex", "sg-ga", "hc-c"].forEach((i) => $(i).addEventListener("input", renderHc));
