@@ -2,7 +2,7 @@
 (function () {
   var PROCS = [
     {
-      title: "הכנת עמדה לקבלה",
+      title: "הכנת עמדה לקבלה: חדרים 2 ו-3",
       items: [
         "אינקובטור פתוח עם חימום (מוגדר על סרבו / <bdi dir=ltr>PRE</bdi>)",
         "כבל לסרבו מותאם לאינקובטור",
@@ -23,8 +23,7 @@
     },
     {
       title: "פתיחת וריד פריפרי",
-      note: "בקבלה של יילוד לבירור זיהומי, יש להוסיף גם את הציוד מהפעולה:",
-      noteLink: "בירור זיהומי בקבלה",
+      notes: [{ pre: "בקבלה של יילוד לבירור זיהומי, יש להוסיף גם את הציוד מהפעולה: ", link: "בירור זיהומי בקבלה", to: "בירור זיהומי בקבלה" }],
       items: [
         "כפפות סטריליות",
         "גזות סטריליות עם תמיסת חיטוי (כלורהקסידין 2%)",
@@ -81,6 +80,52 @@
       depthCalc: true,
       img: "equipment/tube.jpg",
       alt: "הציוד להכנסת זונדה מסודר על העגלה"
+    },
+    {
+      title: "לבוש סטרילי",
+      items: [
+        "חלוק סטרילי",
+        "כובע",
+        "מסכה",
+        "כפפות סטריליות"
+      ],
+      img: "equipment/gown.jpg",
+      alt: "הציוד להכנת לבוש סטרילי מסודר על העגלה"
+    },
+    {
+      title: "הכנסת PICC LINE",
+      items: [
+        "שדה סטרילי × 2",
+        "שדה סטרילי עם חור דביק (לבקשת הרופאה)",
+        "ערכת קטטר טבורי לפגיה",
+        "צנתר ורידי (20 ס\"מ / 8 ס\"מ)",
+        "טרנסאילומינטור",
+        "כיסוי סטרילי למתמר",
+        "שקופית לקיבוע (<bdi dir=ltr>Tegaderm</bdi>) מסוג \"דובי\"",
+        "ביונקטור",
+        "מזרק 3 מ\"ל × 2",
+        "מחט ירוקה",
+        "פדים סטריליים עם תמיסת חיטוי (כלורהקסידין 2% / 1%)"
+      ],
+      notes: [{ pre: "בנוסף, יש להכין ", link: "לבוש סטרילי", post: " למבצעי הפעולה", to: "לבוש סטרילי" }],
+      sterile: "יש לפתוח את הציוד על שדה סטרילי",
+      img: "equipment/picc.jpg",
+      alt: "הציוד להכנסת PICC LINE מסודר על העגלה"
+    },
+    {
+      title: "ביצוע LP (ניקור מותני)",
+      items: [
+        "מבחנה סטרילית שקופה × 4",
+        "פדים סטריליים עם תמיסת חיטוי (כלורהקסידין 2%)",
+        "פדים סטריליים יבשים",
+        "מחט כנפיים (\"פרפרית\") ולהב או מחט כחולה",
+        "שקופית לקיבוע (<bdi dir=ltr>Tegaderm</bdi>)",
+        "טפסי מעבדה: תרבית, כימיה, ספירה ושמירה"
+      ],
+      notes: [{ pre: "בנוסף, יש להכין ", link: "לבוש סטרילי", post: " למבצעי הפעולה", to: "לבוש סטרילי" }],
+      sterile: true,
+      img: "equipment/lp.jpg",
+      alt: "הציוד לביצוע LP מסודר על העגלה"
     }
   ];
   var sel = document.getElementById("eq-sel"), out = document.getElementById("eq-out");
@@ -99,7 +144,7 @@
     if (p.sterile) {
       var gn = document.createElement("p");
       gn.className = "eqsterile";
-      gn.textContent = "יש לפתוח את הציוד על מגש סטרילי";
+      gn.textContent = typeof p.sterile === "string" ? p.sterile : "יש לפתוח את הציוד על מגש סטרילי";
       out.appendChild(gn);
     }
     if (p.depthCalc) {
@@ -161,22 +206,21 @@
     b.className = "nowbtn";
     b.textContent = "ניקוי סימונים";
     out.appendChild(b);
-    if (p.note) {
+    (p.notes || []).forEach(function (n) {
       var nt = document.createElement("p");
       nt.className = "eqnote2";
-      nt.appendChild(document.createTextNode(p.note + " "));
-      if (p.noteLink) {
-        var a = document.createElement("a");
-        a.href = "#";
-        a.textContent = p.noteLink;
-        a.addEventListener("click", function (e) {
-          e.preventDefault();
-          PROCS.forEach(function (q, k) { if (q.title === p.noteLink) { sel.value = k; sel.dispatchEvent(new Event("change")); window.scrollTo(0, 0); } });
-        });
-        nt.appendChild(a);
-      }
+      nt.appendChild(document.createTextNode(n.pre));
+      var a = document.createElement("a");
+      a.href = "#";
+      a.textContent = n.link;
+      a.addEventListener("click", function (e) {
+        e.preventDefault();
+        PROCS.forEach(function (q, k) { if (q.title === n.to) { sel.value = k; sel.dispatchEvent(new Event("change")); window.scrollTo(0, 0); } });
+      });
+      nt.appendChild(a);
+      if (n.post) nt.appendChild(document.createTextNode(n.post));
       out.appendChild(nt);
-    }
+    });
     if (p.img) {
       var h = document.createElement("p");
       h.className = "eqcap";
