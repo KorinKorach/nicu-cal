@@ -80,7 +80,7 @@
 
   // פגים 24 עד 34 שבועות: עקומות NICE (CG98), בקריאה מהעקומות שהוצגו במחלקה.
   // בלידה: אור 40, חילוף 80 מיקרומול/ל'. עולה בקו ישר עד גיל 72 שעות (3 ימים) ואז קבוע.
-  // רמת הרצפה (מגיל 3 ימים): חילוף = 10 × שבוע, אור = חילוף פחות 100. המרה למ"ג/ד"ל: חלוקה ב-17.
+  // רמת הרצפה (מגיל 3 ימים): חילוף = 10 × שבוע, אור = חילוף פחות 100. המרה למ"ג/ד"ל: חלוקה ב-17.1.
   NT.biliNICE = function (gaWeeks, ageHours) {
     const w = Math.floor(gaWeeks);
     if (w < 24) return { error: "out of range", silent: true };
@@ -91,7 +91,7 @@
     return {
       week: w,
       photoUm: photoUm, exchUm: exchUm,
-      photo: photoUm / 17, exchange: exchUm / 17,
+      photo: photoUm / 17.1, exchange: exchUm / 17.1,
       photoFrom: 72, exchFrom: 72,
       beyond: ageHours > 14 * 24,
     };
